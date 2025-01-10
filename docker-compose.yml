@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+    nginx:
+        restart: always
+        image: nginx:1.23-alpine
+        ports:
+            - 80:80
+        volumes:
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+#            - static_volume:/app/backend/django_static
+    server:
+        restart: unless-stopped
+        build:
+            context: .
+            dockerfile: ./docker/backend/Dockerfile
+        
+        image: server  # Name built image
+
+        entrypoint: /install/docker/backend/server-entrypoint.sh
+        # For debugging, to keep docker container running
+        #entrypoint: tail -f /dev/null
+        volumes:
+            - ./:/app
+#            - static_volume:/app/backend/django_static
+        expose:
+            - 8000     
+        depends_on:
+            - db
+    worker:
+        restart: unless-stopped
+        # Reuse server built image
+        image: server
+        entrypoint: /install/docker/backend/worker-entrypoint.sh
+        # For debugging, to keep docker container running
+        #entrypoint: tail -f /dev/null
+        volumes:
+            - ./:/app
+#            - static_volume:/app/backend/django_static
+        depends_on:
+            - server
+            - redis
+    redis:
+        restart: unless-stopped
+        image: redis:7.0.5-alpine 
+        expose:
+            - 6379
+    db:
+        image: postgres:13.0-alpine
+        restart: unless-stopped
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        environment:
+            POSTGRES_DB: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        expose:
+            - 5432
+    
+volumes:
+#    static_volume: {}
+    postgres_data: {}

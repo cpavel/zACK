@@ -1,0 +1,74 @@
+#!/bin/bash
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+cd ..
+
+info "Setting up database related settings."
+echo
+
+
+if [ $# -ge 1 ] && [ "$1" != "--no-input" ]; then
+  interactive_mode=true
+else
+  interactive_mode=false
+fi
+
+echo
+info "Setting up postgres"
+
+until pg_isready -h "$DB_HOST"
+do
+    echo "Waiting for db to be ready..."
+    sleep 2
+done
+echo
+
+PSQL_COMMAND="CREATE ROLE $DB_USER WITH LOGIN SUPERUSER PASSWORD '$DB_PASSWORD'"
+
+if [ "$interactive_mode" = true ]; then
+  OLD_PWD=$(pwd)
+  cd /var/lib/postgresql
+
+  sudo -u postgres psql -c "$PSQL_COMMAND"
+
+  echo "CREATE DATABASE ack" | psql postgres
+
+  cd $OLD_PWD
+else
+  info "Creating project database"
+
+  export PGPASSWORD="$POSTGRES_PASSWORD"
+
+  if psql --host=db --username="$POSTGRES_USER" -lqt | cut -d \| -f 1 | grep -qw ack; then
+    warn "Database is already initialized"
+    exit 0
+  fi
+
+  psql --host=db --username="$POSTGRES_USER" --command="CREATE DATABASE ack"
+  psql --host=db --username="$POSTGRES_USER" --command="$PSQL_COMMAND"
+fi
+
+echo
+info "Migrate database changes"
+./bin/migrate
+
+echo
+info "Create Django/admin superuser"
+if [ "$interactive_mode" = true ]; then
+  info "Press CONTROL-C to skip"
+
+  python manage.py createsuperuser
+else
+  export DJANGO_SUPERUSER_PASSWORD=$DB_PASSWORD
+
+  python manage.py createsuperuser --username "$DB_USER" --email "no@email.com" --no-input
+fi
+
+set -e
+set -u
+
+info "Finished setting up postgres"
+

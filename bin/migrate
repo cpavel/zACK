@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+cd ..
+
+ARG1=${1:-""}
+
+
+if [[ $ARG1 == "rollback" ]]; then
+  error "Can't rollback yet"
+  exit 1
+fi
+info "Running any available migrations"
+echo
+
+python manage.py migrate
+
+info "Finished migrating"

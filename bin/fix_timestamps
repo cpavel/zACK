@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+cd ..
+
+info "Fixing timestamp column locations"
+python bin/etc/fix_timestamps.py

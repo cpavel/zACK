@@ -1,0 +1,15 @@
+[tool.black]
+line-length = 79
+preview = true
+target-version = ['py311']
+
+
+[tool.django-stubs]
+django_settings_module = "ack.settings"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "ack.settings"

@@ -1,0 +1,57 @@
+#!/bin/bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source colors
+
+function prompt_continue(){
+  read -p "Continue with $1 (Y/n)? " user_input
+
+  if [[ $user_input == "y"
+     || $user_input == "Y"
+     || $user_input == "" ]]; then
+    info "Continuing"
+  else
+    warn "Non yes input received; exiting"
+    exit $USER_DISCONTINUED_ERROR
+  fi
+}
+
+function prompt_discontinue(){
+  read -p "Continue with $1 (y/N)? " user_input
+
+  if [[ $user_input == "y"
+     || $user_input == "Y" ]]; then
+    warn "Continuing"
+  else
+    info "Non-yes input received; exiting"
+
+    # We want the error code to indicate that the calling
+    # function bailed on normal operation
+    exit $USER_DISCONTINUED_ERROR
+  fi
+}
+
+# The right way to invest in defense.
+function rand(){
+  ruby -e 'require "securerandom" ; puts SecureRandom.base64(50)'
+}
+
+function info(){
+  tput setaf $TPUT_DARK_GREEN;
+  echo $1
+  tput sgr0;
+}
+
+function warn(){
+  tput bold;
+  tput setaf $TPUT_MUSTARD;
+  echo $1 >&2
+  tput sgr0;
+}
+
+function error(){
+  tput bold;
+  tput setaf $TPUT_DARK_RED;
+  >&2 echo "$@"
+  tput sgr0;
+}

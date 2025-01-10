@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+
+cd ..
+
+info "Collecting static assets and starting prod server"
+echo
+python manage.py collectstatic --noinput
+
+echo
+python manage.py runserver 0.0.0.0:8000

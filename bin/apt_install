@@ -1,0 +1,46 @@
+#!/bin/bash
+echo --- Installing required packages ---
+
+sudo apt update
+
+sudo apt install -y -qq \
+     binutils \
+     curl \
+     direnv \
+     emacs-nox \
+     gcc \
+     jq \
+     libbz2-dev \
+     libcurl4-openssl-dev \
+     libffi-dev \
+     liblzma-dev \
+     libncursesw5-dev \
+     libpq-dev \
+     libreadline-dev \
+     libsqlite3-dev \
+     libssl-dev \
+     libxml2-dev \
+     libxmlsec1-dev \
+     llvm \
+     mercurial \
+     nginx \
+     nmap \
+     nodejs \
+     npm \
+     postgresql \
+     postgresql-client \
+     postgresql-client-common \
+     postgresql-contrib \
+     python3-certbot-nginx \
+     tcl-dev \
+     tcl8.6 \
+     tk-dev \
+     tree \
+     unzip \
+     wget \
+     whois \
+     wmctrl \
+     xz-utils \
+     zip \
+     zlib1g-dev \
+     python-is-python3

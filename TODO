@@ -1,0 +1,13 @@
+Le Plan
+ - Add posts to the HN search?
+ - REST API => JS
+   - Pro: API testable and good.
+   - Con: JS
+
+Lingering TODOs:
+ - Set up heartbeat celery task to schedule jobs
+ - Grep codebase for TODOs
+ - Rate limit HN and OpenAI
+ - Pagination
+ - Switch to DO managed env vars
+ - Switch OpenAI key to Pavel's

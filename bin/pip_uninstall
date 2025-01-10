@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+cd ..
+
+info "Upgrading pip if necessary"
+echo
+pip install --upgrade pip
+
+info "Uninstalling pip packages"
+echo
+pip freeze | xargs pip uninstall -y
+
+info "Finished uninstalling pip packages"

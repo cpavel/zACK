@@ -1,0 +1,47 @@
+#!/bin/bash
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+cd ..
+
+
+if [ $# -ge 1 ] && [ "$1" != "--no-input" ]; then
+  interactive_mode=true
+else
+  interactive_mode=false
+fi
+
+if [ "$interactive_mode" = true ]; then
+  prompt_discontinue "Requires pyenv to be installed and python installed as global. Continue anyway?"
+fi
+
+echo
+
+# Force python check since this should be installed with pyenv.
+python --version
+
+info "Installing prerequisites"
+echo
+
+./bin/apt_install
+
+./bin/pip_install
+
+echo
+info "Installing Tailwind plugin node dependencies"
+
+echo
+python manage.py tailwind install
+
+if [ $# -ge 2 ] && [ "$2" == "--skip-db" ]; then
+  echo
+  warn "Skipping database setup"
+else
+  set +u
+  ./bin/setup_postgres $1
+  set -u
+fi
+
+info "Finished install script! If anything is missing please add it here."

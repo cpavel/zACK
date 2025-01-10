@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+
+cd ..
+
+info "Uninstalling packages before upgrading"
+echo
+./bin/pip_uninstall
+
+# Set requirements to open.
+sed -i 's/==/>=/g' requirements.txt
+
+# Reinstall now that the version is not pinned.
+pip install -r requirements.txt
+
+# Refreeze for the repo.
+pip freeze > requirements.txt
+
+echo
+info "Finished installing everything"

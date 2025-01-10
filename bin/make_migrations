@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+set -u
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source common
+cd ..
+
+info "Trying to make migrations"
+echo
+
+python manage.py makemigrations data
+
+./bin/fix_timestamps
+
+info "isorting and blacking migration files"
+isort data/migrations/
+black data/migrations/
+echo
+info "Finished making migrations!"
