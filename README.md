@@ -1,146 +1,155 @@
-# Ack - The auto-tuning sales tool
+# Ack - The Auto-Tuning Sales Tool
 
-## System requirements
+Ack is a powerful tool designed to automate and optimize sales processes by leveraging advanced AI capabilities. It integrates with various services to provide seamless operations, including Redis for caching and Celery for task management.
 
-OS: Ubuntu 23.04
-Python: 3.11.1 or greater.
-Postgres: 15.2 or greater.
-Redis: 7.0.8 or greater.
+## How to Start Everything
 
-Libraries: see bin/apt_install
-Python: see bin/pip_install
-
-There are also other helper executables in /bin for easy installation.
-
-## Set up project (all env)
-
-- Rename .env_ to .env and set up vars
-- DB_ variables must be set for prod or non virtual env, for docker it is defined in ENV settings of dockerfile
-- RUNNING_ENVIRONMENT is defined in dockerfile too (TODO: make dockers work in dev AND prod mode)
-- OPENAI_KEY must be obtained from openapi
-- DJANGO secret key can be recreated if necessary
-
-## Local Docker installation
-
-Use docker-compose to build and run environment:
-
-- Run `docker-compose build` from ACK (repository) root folder
-- Run `docker-compose up`, it will run container with DEV env and map ACK folder to container /app volume
-
-
-## Deployment steps
-
-There are no defined CI/CD pipelines to push changes from dev to production, you will have to ssh
-to the deployed server with the user name and associated password:
+Assuming everything is installed and the `.env` file is configured properly, you can start the entire system (Redis, Celery, and Django server) with a single command:
 
 ```bash
-ssh username@server_IP
+./zACK/bin/start_services.sh
 ```
 
-Then run the following to download the project.
+This script will:
+- Start the Redis server.
+- Start the Celery worker.
+- Start the Django development server on `127.0.0.1:8000`.
 
-```bash
-sudo mkdir -p /opt/zACK
-```
+## System Requirements
 
-To perform fresh installation, run:
+- **OS**: Ubuntu 22.04 LTS
+- **Python**: 3.11.1 or greater
+- **Postgres**: 15.2 or greater
+- **Redis**: 7.0.8 or greater
 
-```bash
-sudo git clone https://github.com/cpavel/zACK.git /opt/zACK
-sudo chown -R username:username /opt/zACK
-sudo chmod -R 755 /opt/zACK
-sudo ./opt/zACK/bin/apt_install
-sudo python3 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip setuptools wheel
-pip install -q -r requirements.txt
-python manage.py runserver
-```
+Libraries: see `bin/apt_install`
+Python: see `bin/pip_install`
 
-To run any DB migrations, run:
+## Installation and Configuration
 
-```bash
-python manage.py migrate
-```
+### Set Up Project (All Environments)
 
-## Production Use
-1. Create a superuser account using the django helper (for admin)
-   `python manage.py createsuperuser`
-2. Login to the account at the [admin](builtwithml.org/admin).
-3. Create your search terms, prompt templates, and evalutation templates. See the ones already there for examples:
+1. Rename `.env_` to `.env` and set up variables.
+2. DB_ variables must be set for production or non-virtual environments. For Docker, it is defined in the ENV settings of the Dockerfile.
+3. `RUNNING_ENVIRONMENT` is defined in the Dockerfile too (TODO: make Docker work in both dev and prod modes).
+4. Obtain `OPENAI_KEY` from OpenAI.
+5. The Django secret key can be recreated if necessary.
 
-- Search terms are to execute search on HN through https://hn.algolia.com (try search terms there) and get comment+user profile of the author
-- Search is limited for comments not older then 24h
-- For each search result (and for each search term):
-  - Get related prompt templates (i.e. - reach out message) and filter them by profile length)
-  - Randomly select one  prompt template
-  - Ask ChatGPT to reword prompt template using comment and user profile
-  - Each prompt template has own evaluation template
-  - For ChatGPT rewording response, ChatGPT is asked to evaluate score from 0 to 100 relavance based on evaluation template
-  - if score < 60 (hardcoded), result is skipped, otherwise stored
-  
-- Requests to ChatGPT are limited by 10 (hardcoded), because of current OpenAPI account limitation (free account?)
+### Deployment Steps
 
-4. Use Django Admin and Search Terms to initiate search and get rusults through actions
+1. SSH to the deployed server with the username and associated password:
 
-## Host Installation
+   ```bash
+   ssh username@server_IP
+   ```
 
-Rename .env_ to .env and set up variables
-Run /bin/install
+2. Download the project:
 
-## Dev tooling
+   ```bash
+   sudo mkdir -p /opt/zACK
+   ```
 
-Black version 23.3.0 or greater
+3. Perform a fresh installation:
 
-## Testing
+   ```bash
+   sudo git clone https://github.com/cpavel/zACK.git /opt/zACK
+   sudo chown -R username:username /opt/zACK
+   sudo chmod -R 755 /opt/zACK
+   sudo ./opt/zACK/bin/apt_install
+   sudo -u postgres psql
+   CREATE DATABASE zackdb;
+   CREATE USER admin WITH PASSWORD 'admin';
+   GRANT ALL PRIVILEGES ON DATABASE zackdb TO admin;
+   \q
+   sudo python3 -m venv venv
+   source venv/bin/activate
+   pip install -q -r requirements.txt
+   python manage.py makemigrations
+   python manage.py migrate
+   python manage.py runserver 127.0.0.1:8000
+   ```
 
-Use pytest. There is a helper exe in `./bin/run` for fast
-control. Consider aliasing it for faster development.
+4. Run any DB migrations:
 
-## Prod setup
+   ```bash
+   python manage.py migrate
+   ```
 
-### Nginx set up and run
-For nginx to get access to the static files:
+### Production Use
+
+1. Create a superuser account using the Django helper (for admin):
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+2. Log in to the account at the [admin](builtwithml.org/admin).
+3. Create your search terms, prompt templates, and evaluation templates. See the ones already there for examples.
+
+### Host Installation
+
+- Rename `.env_` to `.env` and set up variables.
+- Run `/bin/install`.
+
+### Dev Tooling
+
+- Black version 23.3.0 or greater
+
+### Testing
+
+- Use pytest. There is a helper executable in `./bin/run` for fast control. Consider aliasing it for faster development.
+
+### Prod Setup
+
+#### Nginx Set Up and Run
+
+For Nginx to get access to the static files:
+
 ```bash
 sudo usermod -a -G ack www-data
 sudo chown -R :www-data /home/ack/ack/static
 ```
 
-In the nginx file (e.g., `/etc/nginx/sites-enabled/default`) add:
+In the Nginx file (e.g., `/etc/nginx/sites-enabled/default`) add:
 
 ```bash
-    echo 'server_name builtwithml.org;
+sudo vim /etc/nginx/sites-available/zack
+
+server {
+    listen 80;
+    server_name yourdomain.com;
 
     location / {
-      # First attempt to serve request as file, then
-      # as directory, then fall back to displaying a 404.
-      proxy_pass http://127.0.0.1:8000;
-      proxy_set_header Host $host;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-    }' | sudo tee /etc/nginx/sites-available/zACK
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    # Error handling (optional)
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}
 
-sudo ln -s /etc/nginx/sites-available/zACK /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/zack /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
 ```
 
-Then run
+### Docker Installation
 
-```bash
-sudo systemctl reload nginx
-```
+Use Docker Compose to build and run the environment:
 
-### Run Django Derver (first)
-Run in deatached terminal `.bin/prod` (via screen for example)
+- Run `docker-compose build` from the ACK (repository) root folder.
+- Run `docker-compose up`, it will run the container with the DEV environment and map the ACK folder to the container `/app` volume.
 
-### Run Celery (second)
-Run in deatached terminal `.bin/celery` (via screen for example)
+## Upcoming Dev Tooling
 
-## Upcoming dev tooling
+Some sort of type enforcer and some sort of linter. Options include either:
 
-Some sort of type enforcer and some sort of linter. Options
-include either:
-
-[Ruff](https://github.com/charliermarsh/ruff) on it's own.
+- [Ruff](https://github.com/charliermarsh/ruff) on its own.
 
 Or a combination of:
 
@@ -148,5 +157,4 @@ Or a combination of:
 - flake8
 - pylint
 
-Ruff is new and exciting but need to test claims. Current
-typing in the project is not enforced or complete.
+Ruff is new and exciting but needs to test claims. Current typing in the project is not enforced or complete.

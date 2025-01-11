@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 from .env import (
     DJANGO_DEBUG,
@@ -7,6 +8,7 @@ from .env import (
     DB_USER,
     DB_PASSWORD,
     DB_HOST,
+    DB_NAME,
 )
 from .env import ENV_REDIS_HOSTNAME, ENV_REDIS_PORT, ENV_REDIS_PASSWORD
 from .settings_helpers import one
@@ -110,7 +112,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": DB_HOST,
-        "NAME": "ack",
+        "NAME": DB_NAME,
         "USER": DB_USER,
         "PASSWORD": DB_PASSWORD,
     }
@@ -172,3 +174,11 @@ BACKOFF_MAX_TRIES = 3 if IS_TEST or not IS_PROD else 5
 SEARCH_LIMIT = 1 if IS_TEST or not IS_PROD else 20
 
 assert one(IS_DEV, IS_PROD, IS_STAGING)
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+
+# Optional: Celery settings
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

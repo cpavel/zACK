@@ -8,6 +8,7 @@ load_dotenv()
 DB_USER = os.environ["DB_USER"]
 DB_PASSWORD = os.environ["DB_PASSWORD"]
 DB_HOST = os.environ["DB_HOST"]
+DB_NAME = os.environ["DB_NAME"]
 
 ENV_REDIS_HOSTNAME = os.environ["REDIS_HOSTNAME"]
 ENV_REDIS_PORT = os.environ["REDIS_PORT"]
@@ -27,3 +28,6 @@ ENABLE_REAL_CELERY_IN_TESTING = (
     os.environ["ENABLE_REAL_CELERY_IN_TESTING"] == "True"
 )
 ENABLE_REAL_API_IN_TESTING = os.environ["ENABLE_REAL_API_IN_TESTING"] == "True"
+
+CUSTOM_LLM_API_BASE_URL = os.environ["CUSTOM_LLM_API_BASE_URL"]
+CUSTOM_LLM_API_KEY = os.environ["CUSTOM_LLM_API_KEY"]
