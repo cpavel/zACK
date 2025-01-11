@@ -31,22 +31,23 @@ Use docker-compose to build and run environment:
 ## Deployment steps
 
 There are no defined CI/CD pipelines to push changes from dev to production, you will have to ssh
-to the deployed server with the `ack` user and associated password:
+to the deployed server with the user name and associated password:
 
 ```bash
-ssh ack@142.93.164.53
+ssh username@server_IP
 ```
 
-Then run the following to change to the root folder of the hosted project.
+Then run the following to download the project.
 
 ```bash
-cd ack
+sudo mkdir -p /opt/zACK
 ```
 
 To update with any code changes to the repository, run:
 
 ```bash
-git pull
+git clone https://github.com/cpavel/zACK.git /opt/zACK
+sudo chmod -R 755 /opt/zACK
 ```
 
 To run any DB migrations, run:
@@ -100,8 +101,8 @@ sudo chown -R :www-data /home/ack/ack/static
 
 In the nginx file (e.g., `/etc/nginx/sites-enabled/default`) add:
 
-```
-    server_name builtwithml.org;
+```bash
+    echo 'server_name builtwithml.org;
 
     location / {
       # First attempt to serve request as file, then
@@ -110,13 +111,9 @@ In the nginx file (e.g., `/etc/nginx/sites-enabled/default`) add:
       proxy_set_header Host $host;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_redirect http://127.0.0.1:8000 http://builtwithml.org;
-    }
+    }' | sudo tee /etc/nginx/sites-available/zACK
 
-    location /static/{
-      autoindex on;
-      alias /home/ack/ack/static/;
-    }
+sudo ln -s /etc/nginx/sites-available/zACK /etc/nginx/sites-enabled/
 ```
 
 Then run
