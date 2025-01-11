@@ -20,7 +20,7 @@ fi
 echo
 
 # Force python check since this should be installed with pyenv.
-python --version
+python3 --version
 
 info "Installing prerequisites"
 echo
@@ -33,7 +33,7 @@ echo
 info "Installing Tailwind plugin node dependencies"
 
 echo
-python manage.py tailwind install
+python3 manage.py tailwind install
 
 if [ $# -ge 2 ] && [ "$2" == "--skip-db" ]; then
   echo

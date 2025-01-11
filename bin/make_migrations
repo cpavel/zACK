@@ -10,7 +10,7 @@ cd ..
 info "Trying to make migrations"
 echo
 
-python manage.py makemigrations data
+python3 manage.py makemigrations data
 
 ./bin/fix_timestamps
 

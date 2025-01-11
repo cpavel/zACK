@@ -43,11 +43,18 @@ Then run the following to download the project.
 sudo mkdir -p /opt/zACK
 ```
 
-To update with any code changes to the repository, run:
+To perform fresh installation, run:
 
 ```bash
-git clone https://github.com/cpavel/zACK.git /opt/zACK
+sudo git clone https://github.com/cpavel/zACK.git /opt/zACK
+sudo chown -R username:username /opt/zACK
 sudo chmod -R 755 /opt/zACK
+sudo ./opt/zACK/bin/apt_install
+sudo python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip setuptools wheel
+pip install -q -r requirements.txt
+python manage.py runserver
 ```
 
 To run any DB migrations, run:
