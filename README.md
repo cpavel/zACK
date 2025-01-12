@@ -1,6 +1,6 @@
-# Ack - The Auto-Tuning Sales Tool
+# zAck - The Auto-Tuning Sales Tool
 
-Ack is a powerful tool designed to automate and optimize sales processes by leveraging advanced AI capabilities. It integrates with various services to provide seamless operations, including Redis for caching and Celery for task management.
+zAck is an AI agentic tool designed to automate and optimize social media engagements  by leveraging advanced LLM capabilities. While you cant personally read and respond to every social media post with your professional expertise, zAck is able to do so 24.7.365 thereby maximizing value for you.
 
 ## How to Start Everything
 
@@ -13,26 +13,27 @@ Assuming everything is installed and the `.env` file is configured properly, you
 This script will:
 - Start the Redis server.
 - Start the Celery worker.
-- Start the Django development server on `127.0.0.1:8000`.
+- Start the Django server on `127.0.0.1:8000`. Use your DNS provider to map public IP address of the server to a URL of your choosing.
 
 ## System Requirements
 
 - **OS**: Ubuntu 22.04 LTS
-- **Python**: 3.11.1 or greater
+- **Python**: 3.11.x
 - **Postgres**: 15.2 or greater
 - **Redis**: 7.0.8 or greater
 
-Libraries: see `bin/apt_install`
-Python: see `bin/pip_install`
+Libraries and dependencies: see `bin/apt_install`
+Python packages: see `bin/pip_install`
 
 ## Installation and Configuration
+Project Architecture in visual form: https://gitdiagram.com/cpavel/zACK
 
 ### Set Up Project (All Environments)
 
 1. Rename `.env_` to `.env` and set up variables.
 2. DB_ variables must be set for production or non-virtual environments. For Docker, it is defined in the ENV settings of the Dockerfile.
 3. `RUNNING_ENVIRONMENT` is defined in the Dockerfile too (TODO: make Docker work in both dev and prod modes).
-4. Obtain `OPENAI_KEY` from OpenAI.
+4. Obtain `OPENAI_KEY` from OpenAI or use your custom LLM API
 5. The Django secret key can be recreated if necessary.
 
 ### Deployment Steps
@@ -83,7 +84,7 @@ Python: see `bin/pip_install`
    python manage.py createsuperuser
    ```
 
-2. Log in to the account at the [admin](builtwithml.org/admin).
+2. Log in to the account at the www.Your_URL.com/admin).
 3. Create your search terms, prompt templates, and evaluation templates. See the ones already there for examples.
 
 ### Host Installation
