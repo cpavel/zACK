@@ -55,7 +55,7 @@ if IS_DEV:
 # Load system prompts from JSON file with error handling
 def load_system_prompt(role: str):
     try:
-        with open("zACK/system_prompts.json", "r") as file:
+        with open("/opt/zACK/system_prompts.json", "r") as file:
             data = json.load(file)
             return data.get(role, {}).get("system_prompt", "")
     except (FileNotFoundError, json.JSONDecodeError) as e:

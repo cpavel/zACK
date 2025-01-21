@@ -34,13 +34,3 @@ CUSTOM_LLM_API_KEY = os.environ.get("CUSTOM_LLM_API_KEY", "")
 CUSTOM_LLM_MODEL = os.environ.get("CUSTOM_LLM_MODEL", "default-model")
 
 print("Current working directory:", os.getcwd())
-
-def load_system_prompt(role: str):
-    try:
-        # Adjust the path as needed
-        with open("/opt/zACK/system_prompts.json", "r") as file:
-            data = json.load(file)
-            return data.get(role, {}).get("system_prompt", "")
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Error loading system prompt for {role}: {e}")
-        return ""
