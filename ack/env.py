@@ -29,3 +29,4 @@ ENABLE_REAL_API_IN_TESTING = os.environ.get("ENABLE_REAL_API_IN_TESTING", "True"
 
 CUSTOM_LLM_API_BASE_URL = os.environ.get("CUSTOM_LLM_API_BASE_URL", "")
 CUSTOM_LLM_API_KEY = os.environ.get("CUSTOM_LLM_API_KEY", "")
+CUSTOM_LLM_MODEL = os.environ.get("CUSTOM_LLM_MODEL", "default-model")
