@@ -30,6 +30,28 @@ from .settings import REDIS_HOSTNAME, REDIS_PASSWORD, REDIS_PORT, IS_DEV
 
 HN_API_ROOT = "https://hn.algolia.com/api/v1"
 
+LOGS_DIR = "./logs/"
+SEARCH_TERM_LOG_FILE_NAME = "{}searchterm-{}.log"
+
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+# Initialize logger
+logging.basicConfig(filename=LOGS_DIR + "ack.log", filemode="a")
+logger = logging.getLogger(__name__)
+
+if IS_DEV:
+    logger.setLevel(logging.DEBUG)
+    # add StreamHandler log handler
+    console_logger = logging.StreamHandler()
+    console_logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    console_logger.setFormatter(formatter)
+    logger.addHandler(console_logger)
+
+    logger.info("Running in DEV mode")
+
 # Load system prompts from JSON file with error handling
 def load_system_prompt(role: str):
     try:
@@ -62,15 +84,8 @@ HACKER_NEWS_BASE_ITEM_HOST = "https://news.ycombinator.com/item?id="
 HACKER_NEWS_API_HOST = "https://hn.algolia.com/api/v1"
 HACKER_NEWS_HOURLY_RATE_LIMIT = 10_000
 
-LOGS_DIR = "./logs/"
-SEARCH_TERM_LOG_FILE_NAME = "{}searchterm-{}.log"
-
-os.makedirs(LOGS_DIR, exist_ok=True)
-
-
 class HackerNewsRateLimitError(Exception):
     pass
-
 
 # Use redis_client for the normal redis client, and this class
 # if you need to customize it.
@@ -339,20 +354,3 @@ TASK_DEFAULTS = {
     "max_retries": 5,
     "retry_backoff": True,
 }
-
-logging.basicConfig(filename=LOGS_DIR + "ack.log", filemode="a")
-
-logger = logging.getLogger(__name__)
-
-if IS_DEV:
-    logger.setLevel(logging.DEBUG)
-    # add StreamHandler log handler
-    console_logger = logging.StreamHandler()
-    console_logger.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    console_logger.setFormatter(formatter)
-    logger.addHandler(console_logger)
-
-    logger.info("Running in DEV mode")
