@@ -5,10 +5,10 @@ from dotenv import load_dotenv
 # Load .env into environment variable if exists
 load_dotenv()
 
-DB_USER = os.environ.get("DB_USER", "default_user")
-DB_PASSWORD = os.environ.get("DB_PASSWORD", "default_password")
+DB_USER = os.environ.get("DB_USER", "admin")
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "admin")
 DB_HOST = os.environ.get("DB_HOST", "localhost")
-DB_NAME = os.environ.get("DB_NAME", "default_db")
+DB_NAME = os.environ.get("DB_NAME", "zackdb")
 
 ENV_REDIS_HOSTNAME = os.environ.get("REDIS_HOSTNAME", "localhost")
 ENV_REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
