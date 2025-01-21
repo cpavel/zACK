@@ -62,7 +62,7 @@ Project Architecture in visual form: https://gitdiagram.com/cpavel/zACK
    CREATE USER admin WITH PASSWORD 'admin';
    GRANT ALL PRIVILEGES ON DATABASE zackdb TO admin;
    \q
-   
+
 Rename .env_ to .env and set up variables
 
    cd /opt/zACK
@@ -74,6 +74,7 @@ Rename .env_ to .env and set up variables
    pip install -q -r requirements.txt
    python manage.py makemigrations
    python manage.py migrate
+   python manage.py createsuperuser
    python manage.py runserver 127.0.0.1:8000
    ```
 

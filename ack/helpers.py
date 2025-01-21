@@ -178,27 +178,8 @@ class HackerNewsClient:
         value -= 1
         self.redis_client.set_int(key, value)
 
-    def get_hacker_news_profile(
-        self, username: str, force: bool = False
-    ) -> tuple[str, str]:
-        # Lower limit for profile to allow ongoing search
-        # collection to finish up.
-        self.check_rate_limit(remaining_rate=300)
-
-        key = f"ack.helpers.get_hacker_news_profile.{username}.about"
-        profile_about = redis_client.get(key)
-        url = "https://hn.algolia.com/api/v1/users/" + username
-        hacker_news_url = "https://news.ycombinator.com/user?id=" + username
-        if not profile_about:
-            response = self.get(url)
-            # TODO: Include some sense of how pro this HN user is.
-            profile_about = response.json()["about"].strip()
-            redis_client.set_str(key, value=profile_about, ttl=ONE_DAY)
-
-        return profile_about, hacker_news_url
-
     def search_hacker_news(self, term: Optional[str] = None):
-        logger.info("Search for: %s", term)
+        logger.info("Initiating search for term: %s", term)
 
         self.check_rate_limit(remaining_rate=2000)
 
@@ -221,9 +202,32 @@ class HackerNewsClient:
             retries -= 1
             response = self.get(url)
 
-        logger.info("Hits collected: %i", len(response.json()["hits"]))
+        hits = response.json().get("hits", [])
+        logger.info("Hits collected: %i", len(hits))
+
+        for hit in hits:
+            logger.info("Found comment by %s: %s", hit["author"], hit["comment_text"])
 
         return response
+
+    def get_hacker_news_profile(
+        self, username: str, force: bool = False
+    ) -> tuple[str, str]:
+        logger.info("Fetching profile for user: %s", username)
+
+        self.check_rate_limit(remaining_rate=300)
+
+        key = f"ack.helpers.get_hacker_news_profile.{username}.about"
+        profile_about = redis_client.get(key)
+        url = "https://hn.algolia.com/api/v1/users/" + username
+        hacker_news_url = "https://news.ycombinator.com/user?id=" + username
+        if not profile_about:
+            response = self.get(url)
+            profile_about = response.json().get("about", "").strip()
+            redis_client.set_str(key, value=profile_about, ttl=ONE_DAY)
+            logger.info("Profile about for %s: %s", username, profile_about)
+
+        return profile_about, hacker_news_url
 
     def get_hacker_news_context(self, search_term_hits):
         for rec in search_term_hits:
