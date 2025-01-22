@@ -14,7 +14,7 @@ from django.db.models import (
     TextField,
 )
 from campaigns.models import Campaign
-from ack import enums
+from zACK import enums
 
 from .validators import prompt_template_profile_length_validation
 

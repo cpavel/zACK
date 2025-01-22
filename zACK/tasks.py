@@ -11,11 +11,11 @@ from leads.models import Lead
 from django.db import transaction
 from django.utils.html import strip_tags
 
-from ack import enums
-from ack.celery import app
+from zACK import enums
+from zACK.celery import app
 from .instructions import hacker_news
 
-from ack.helpers import (
+from zACK.helpers import (
     HackerNewsRateLimitError,
     build_hacker_news_response_evaluation,
     build_hacker_news_oai_instruction,

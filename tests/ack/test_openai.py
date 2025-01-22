@@ -1,4 +1,4 @@
-from ack.helpers import run_reword
+from zACK.helpers import run_reword
 
 
 def test_gpt():

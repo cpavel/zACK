@@ -3,7 +3,7 @@ from campaigns.models import Campaign
 
 from campaigns.actions import find_leads
 from campaigns.utils import update_campaign_run_status
-from ack.celery import app
+from zACK.celery import app
 
 logger = logging.getLogger(__name__)
 

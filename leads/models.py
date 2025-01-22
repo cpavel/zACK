@@ -9,8 +9,8 @@ from django.db.models import (
 )
 from campaigns.models import Campaign
 from data.models import SearchTerm
-from ack import enums
-from ack.mixins import TimeStampMixin
+from zACK import enums
+from zACK.mixins import TimeStampMixin
 
 
 class Lead(TimeStampMixin):

@@ -1,8 +1,8 @@
 import glob
 
-from ack import enums
-from ack.env import ENABLE_REAL_CELERY_IN_TESTING
-from ack.tasks import search_leads
+from zACK import enums
+from zACK.env import ENABLE_REAL_CELERY_IN_TESTING
+from zACK.tasks import search_leads
 
 
 # TODO: Fix test

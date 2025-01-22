@@ -8,9 +8,9 @@ from django.db.models import (
     Index,
     UniqueConstraint,
 )
-from ack import enums
-from ack.mixins import TimeStampMixin
-from ack.fields import ChoiceArrayField
+from zACK import enums
+from zACK.mixins import TimeStampMixin
+from zACK.fields import ChoiceArrayField
 
 
 class Campaign(TimeStampMixin):

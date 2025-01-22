@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from model_bakery import baker as baker_lib
 from rest_framework.test import APIClient
 
-from ack.env import ENABLE_REAL_API_IN_TESTING, ENABLE_REAL_CELERY_IN_TESTING
+from zACK.env import ENABLE_REAL_API_IN_TESTING, ENABLE_REAL_CELERY_IN_TESTING
 
 
 @pytest.fixture
