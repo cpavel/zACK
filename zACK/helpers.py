@@ -36,7 +36,7 @@ SEARCH_TERM_LOG_FILE_NAME = "{}searchterm-{}.log"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 # Initialize logger
-logging.basicConfig(filename=LOGS_DIR + "ack.log", filemode="a")
+logging.basicConfig(filename=LOGS_DIR + "zack.log", filemode="a")
 logger = logging.getLogger(__name__)
 
 if IS_DEV:
