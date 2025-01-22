@@ -6,12 +6,12 @@ from django.urls import reverse, path
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
-from ack.helpers import LOGS_DIR
-from ack.tasks import SEARCH_TERM_LOG_FILE_NAME
+from zACK.helpers import LOGS_DIR
+from zACK.tasks import SEARCH_TERM_LOG_FILE_NAME
 from leads.helpers import RESULTS_FILE_NAME, RESULTS_DIR
 
 from data import models
-from ack.tasks import async_search_term_by_id
+from zACK.tasks import async_search_term_by_id
 
 
 @admin.action(description="Start search")
