@@ -7,7 +7,7 @@ zAck is an AI agentic tool designed to automate and optimize social media engage
 Assuming everything is installed and the `.env` file is configured properly, you can start the entire system (Redis, Celery, and Django server) with a single command:
 
 ```bash
-./zACK/bin/start_services.sh
+./opt/zACK/bin/start_services.sh
 ```
 
 This script will:
@@ -75,7 +75,6 @@ Rename .env_ to .env and set up variables
    python manage.py makemigrations
    python manage.py migrate
    python manage.py createsuperuser
-   python manage.py runserver 127.0.0.1:8000
    ```
 
 4. Run any DB migrations:

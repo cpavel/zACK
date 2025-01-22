@@ -478,3 +478,8 @@ def search_leads(
 
     if search_term_id is not None:
         set_search_term_run_status(search_terms[0], "Done")
+
+@app.task
+def run_search_task(search_term_id):
+    logger.info(f"Running search task for search term ID: {search_term_id}")
+    # Your task logic here
