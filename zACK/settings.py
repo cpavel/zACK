@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     "159.203.34.127",  # Prod IP.
     "builtwithml.org",  # Prod domain.
     "www.builtwithml.org",  # Prod alt domain.
-    "api.ack.test",
+    "api.zack.test",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
