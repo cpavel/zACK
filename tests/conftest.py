@@ -18,7 +18,7 @@ def api_client():
                 method, path, data, content_type, secure, **extra
             )
 
-    return _APIClient(HTTP_HOST="api.zack.test", secure=True)
+    return _APIClient(HTTP_HOST="api.zACK.test", secure=True)
 
 
 pytest_plugins = ["tests.fixtures"]

@@ -1,8 +1,8 @@
 import logging
 import random
-from ack.enums import SearchLocation
-from ack.instructions import hacker_news
-from ack.helpers import (
+from zACK.enums import SearchLocation
+from zACK.instructions import hacker_news
+from zACK.helpers import (
     HackerNewsRateLimitError,
     get_hacker_news_client,
     build_hacker_news_post_evaluation,
