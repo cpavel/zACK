@@ -29,8 +29,7 @@ STATIC_URL = "/static/"
 ALLOWED_HOSTS = [
     "localhost",  # Local.
     "127.0.0.1",  # Local.
-    "142.93.50.205",  # Zach Aysan's dev IP.
-    "142.93.164.53",  # Prod IP.
+    "159.203.34.127",  # Prod IP.
     "builtwithml.org",  # Prod domain.
     "www.builtwithml.org",  # Prod alt domain.
     "api.ack.test",
@@ -57,7 +56,7 @@ EXTERNAL_APPS = [
 ]
 
 INTERNAL_APPS = [
-    "ack",
+    "zACK",
     "data",
     "leads",
     "campaigns",
@@ -84,7 +83,7 @@ MIDDLEWARE = [  # ORDER MATTERS! DO NOT SORT!
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
-ROOT_URLCONF = "ack.urls"
+ROOT_URLCONF = "zACK.urls"
 
 TEMPLATES = [
     {
@@ -102,7 +101,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "ack.wsgi.application"
+WSGI_APPLICATION = "zACK.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -162,7 +161,7 @@ REDIS_PASSWORD = ENV_REDIS_PASSWORD
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
-CELERY_IMPORTS = ("ack.tasks",)
+CELERY_IMPORTS = ("zACK.tasks",)
 
 # TODO: Set in pytest.
 IS_TEST = RUNNING_ENVIRONMENT == "test"
