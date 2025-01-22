@@ -152,7 +152,7 @@ class HackerNewsClient:
     def rate_limit_key(self) -> str:
         unix_timestamp = int(time.time())
         hourly_unix_timestamp = unix_timestamp - (unix_timestamp % ONE_HOUR)
-        key = "ack.helpers.HackerNewsClient.rate_limit_remaining."
+        key = "zACK.helpers.HackerNewsClient.rate_limit_remaining."
         key += str(hourly_unix_timestamp)
         return key
 
@@ -217,7 +217,7 @@ class HackerNewsClient:
 
         self.check_rate_limit(remaining_rate=300)
 
-        key = f"ack.helpers.get_hacker_news_profile.{username}.about"
+        key = f"zACK.helpers.get_hacker_news_profile.{username}.about"
         profile_about = redis_client.get(key)
         url = "https://hn.algolia.com/api/v1/users/" + username
         hacker_news_url = "https://news.ycombinator.com/user?id=" + username
