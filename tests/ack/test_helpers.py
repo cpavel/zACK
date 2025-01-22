@@ -1,7 +1,7 @@
 import random
 import time
 
-from ack.helpers import redis_client
+from zACK.helpers import redis_client
 
 
 def test_redis_int():

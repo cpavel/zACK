@@ -4,11 +4,11 @@
 import os
 import django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ack.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "zACK.settings")
 django.setup()
 
-from ack.tasks import search_leads, async_search_term_by_id
-from ack import enums
+from zACK.tasks import search_leads, async_search_term_by_id
+from zACK import enums
 from django.contrib.auth.models import User
 
 me = User.objects.get(username="admin")  # Search for this user.

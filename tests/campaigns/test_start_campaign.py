@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch
 from django.urls import reverse
-from ack import enums
+from zACK import enums
 from leads.models import Lead
 from campaigns.models import Campaign
 from campaigns.actions import find_leads

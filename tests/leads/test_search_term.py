@@ -1,4 +1,4 @@
-from ack.helpers import (
+from zACK.helpers import (
     build_hacker_news_oai_instruction,
     get_openai_models,
     hacker_news_client,

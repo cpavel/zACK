@@ -1,6 +1,6 @@
 import pytest
 from django.urls import reverse
-from ack import enums
+from zACK import enums
 from campaigns.models import Campaign
 from data.models import PromptTemplate
 

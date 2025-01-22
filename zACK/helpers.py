@@ -15,7 +15,7 @@ import redis
 import requests
 from urllib.parse import quote
 from django.utils.html import strip_tags
-from ack.celery import app
+from zACK.celery import app
 from data.models import EvaluationTemplate, PromptTemplate
 
 from .env import (

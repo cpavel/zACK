@@ -6,7 +6,7 @@ from campaigns.models import Campaign
 
 import xlsxwriter
 
-from ack import enums
+from zACK import enums
 
 RESULTS_DIR = "./tmp/"
 RESULTS_FILE_NAME = "{}leadresults-{}.xlsx"
