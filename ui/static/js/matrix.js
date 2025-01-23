@@ -26,14 +26,17 @@ class MatrixEffect {
         window.addEventListener('resize', () => this.resize());
 
         // Initialize columns
-        this.fontSize = 15;
+        this.fontSize = 14;
         this.columns = Math.floor(this.canvas.width / this.fontSize);
-        this.drops = Array(this.columns).fill(1);
-        this.speeds = Array.from({ length: this.columns }, () => Math.random() * 0.1 + 0.05); // Random speeds
+        this.drops = Array(this.columns).fill(0);
+        this.activeColumns = new Set(); // Track which columns are showing messages
         
-        // Create character sets including our messages
+        // Initialize speeds and message states
+        this.speeds = Array.from({ length: this.columns }, () => Math.random() * 0.3 + 0.1);
+        this.messageStates = Array(this.columns).fill(null);
+        
+        // Create character sets
         this.chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$@#*%'.split('');
-        this.messageChars = this.messages.join(' ').split('');
         
         // Start the animation
         this.animate();
@@ -44,44 +47,71 @@ class MatrixEffect {
         this.canvas.height = window.innerHeight;
     }
 
-    getRandomSentence() {
-        // Select a random sentence from the messages array
+    getRandomMessage() {
         return this.messages[Math.floor(Math.random() * this.messages.length)];
     }
 
     draw() {
-        // Create semi-transparent black rectangle to create trailing effect
-        this.ctx.fillStyle = '#0001';
+        // Create semi-transparent black rectangle for fade effect
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Set text properties
-        this.ctx.fillStyle = '#0F0';
-        this.ctx.font = '15pt monospace';
+        this.ctx.font = this.fontSize + 'px monospace';
 
-        // Draw characters vertically
-        for (let i = 0; i < this.drops.length; i++) {
+        // Randomly start new message streams
+        if (Math.random() < 0.02) { // Adjust probability for message frequency
+            const col = Math.floor(Math.random() * this.columns);
+            if (!this.activeColumns.has(col)) {
+                this.activeColumns.add(col);
+                this.messageStates[col] = {
+                    message: this.getRandomMessage(),
+                    position: 0
+                };
+            }
+        }
+
+        // Draw and update each column
+        for (let i = 0; i < this.columns; i++) {
             const x = i * this.fontSize;
-            let y = this.drops[i] * this.fontSize;
+            const y = this.drops[i] * this.fontSize;
 
-            // Get a random sentence from the messages
-            const sentence = this.getRandomSentence();
-
-            // Draw each character of the sentence vertically
-            for (let j = 0; j < sentence.length; j++) {
-                const char = sentence[j];
-                this.ctx.fillText(char, x, y + j * this.fontSize);
+            // Draw message characters if column is active
+            if (this.activeColumns.has(i) && this.messageStates[i]) {
+                const messageState = this.messageStates[i];
+                const chars = messageState.message.split('');
+                
+                // Draw each character of the message with different intensities
+                for (let j = 0; j < chars.length; j++) {
+                    const charY = y + (j * this.fontSize);
+                    if (charY > 0 && charY < this.canvas.height) {
+                        // Create glowing effect for leading characters
+                        const alpha = Math.max(0, 1 - (j * 0.1));
+                        this.ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`;
+                        if (j === 0) {
+                            // Make first character brighter
+                            this.ctx.fillStyle = '#fff';
+                        }
+                        this.ctx.fillText(chars[j], x, charY);
+                    }
+                }
+            } else {
+                // Draw random characters for non-message columns
+                if (Math.random() < 0.05) { // Reduced probability for sparser effect
+                    const randomChar = this.chars[Math.floor(Math.random() * this.chars.length)];
+                    this.ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+                    this.ctx.fillText(randomChar, x, y);
+                }
             }
 
-            // Adjust speed based on vertical position
-            const positionFactor = y / this.canvas.height;
-            const speedAdjustment = 1 - positionFactor; // Slower at the top, faster at the bottom
+            // Update positions
+            this.drops[i] += this.speeds[i];
 
-            // Move the column down
-            this.drops[i] += this.speeds[i] * speedAdjustment * 0.2; // Further adjusted for sparseness
-
-            // Reset column if it goes off screen
-            if (this.drops[i] * this.fontSize > this.canvas.height) {
+            // Reset column when it goes off screen
+            if (this.drops[i] * this.fontSize > this.canvas.height + 100) {
                 this.drops[i] = 0;
+                this.activeColumns.delete(i);
+                this.messageStates[i] = null;
             }
         }
     }

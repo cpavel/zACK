@@ -4,6 +4,7 @@ from html import unescape
 import random
 from typing import Optional
 from dataclasses import asdict
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -27,7 +28,7 @@ from zACK.helpers import (
     run_reword,
 )
 
-from data.models import PromptTemplate, SearchTerm
+from data.models import PromptTemplate, SearchTerm, Campaign
 from leads.helpers import LeadSearchResult, store_search_results
 
 from celery import shared_task
@@ -489,12 +490,50 @@ def run_search_task(search_term_id):
 
 @shared_task
 def async_start_campaign(campaign_id):
-    # Implement the logic to start the campaign
-    print(f"Starting campaign with ID: {campaign_id}")
-    # Add your campaign start logic here
+    """
+    Start a campaign asynchronously
+    """
+    try:
+        campaign = Campaign.objects.get(id=campaign_id)
+        logger.info(f"Starting campaign {campaign.name} (ID: {campaign_id})")
+        
+        # Log the start of campaign
+        log_file_path = os.path.join(LOGS_DIR, f"campaign_{campaign_id}.log")
+        with open(log_file_path, "a") as f:
+            f.write(f"\n[{datetime.now()}] Campaign started\n")
+            
+        # Add your campaign start logic here
+        # For example, start searching for leads, etc.
+        
+        return True
+    except Campaign.DoesNotExist:
+        logger.error(f"Campaign {campaign_id} not found")
+        return False
+    except Exception as e:
+        logger.error(f"Error starting campaign {campaign_id}: {str(e)}")
+        return False
 
 @shared_task
 def async_stop_campaign(campaign_id):
-    # Implement the logic to stop the campaign
-    print(f"Stopping campaign with ID: {campaign_id}")
-    # Add your campaign stop logic here
+    """
+    Stop a campaign asynchronously
+    """
+    try:
+        campaign = Campaign.objects.get(id=campaign_id)
+        logger.info(f"Stopping campaign {campaign.name} (ID: {campaign_id})")
+        
+        # Log the stop of campaign
+        log_file_path = os.path.join(LOGS_DIR, f"campaign_{campaign_id}.log")
+        with open(log_file_path, "a") as f:
+            f.write(f"\n[{datetime.now()}] Campaign stopped\n")
+            
+        # Add your campaign stop logic here
+        # For example, stop any running tasks, cleanup, etc.
+        
+        return True
+    except Campaign.DoesNotExist:
+        logger.error(f"Campaign {campaign_id} not found")
+        return False
+    except Exception as e:
+        logger.error(f"Error stopping campaign {campaign_id}: {str(e)}")
+        return False

@@ -153,18 +153,24 @@ class CampaignAdmin(admin.ModelAdmin):
 
     def start_campaign(self, request, object_id, *args, **kwargs):
         campaign = self.get_object(request, object_id)
-        async_start_campaign.delay(object_id)
-        campaign.save()
-        return redirect('..')  # Redirect to the campaign list
+        if campaign:
+            async_start_campaign.delay(object_id)
+            campaign.save()
+        return redirect('admin:data_campaign_changelist')
 
     def stop_campaign(self, request, object_id, *args, **kwargs):
         campaign = self.get_object(request, object_id)
-        async_stop_campaign.delay(object_id)
-        campaign.save()
-        return redirect('..')  # Redirect to the campaign list
+        if campaign:
+            async_stop_campaign.delay(object_id)
+            campaign.save()
+        return redirect('admin:data_campaign_changelist')
 
     def view_results(self, request, object_id, *args, **kwargs):
-        log_file_path = f"/opt/zACK/logs/campaign_{object_id}.log"
+        campaign = self.get_object(request, object_id)
+        if not campaign:
+            return HttpResponse("Campaign not found", status=404)
+            
+        log_file_path = os.path.join(LOGS_DIR, f"campaign_{object_id}.log")
         try:
             with open(log_file_path, "r") as file:
                 file_content = file.read()
@@ -173,27 +179,6 @@ class CampaignAdmin(admin.ModelAdmin):
 
         return HttpResponse(file_content, content_type="text/plain")
 
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path(
-                r"<path:object_id>/start-campaign/",
-                self.admin_site.admin_view(self.start_campaign),
-                name="start-campaign",
-            ),
-            path(
-                r"<path:object_id>/stop-campaign/",
-                self.admin_site.admin_view(self.stop_campaign),
-                name="stop-campaign",
-            ),
-            path(
-                r"<path:object_id>/view-results/",
-                self.admin_site.admin_view(self.view_results),
-                name="view-results",
-            ),
-        ]
-        return custom_urls + urls
-
     def campaign_actions(self, obj):
         return format_html(
             (
@@ -201,9 +186,9 @@ class CampaignAdmin(admin.ModelAdmin):
                 '<a class="button" href="{}">Stop</a>&nbsp;'
                 '<a class="button" href="{}" target="_blank">Results</a>'
             ),
-            reverse("admin:start-campaign", args=[obj.pk]),
-            reverse("admin:stop-campaign", args=[obj.pk]),
-            reverse("admin:view-results", args=[obj.pk]),
+            reverse("admin:data_campaign_start-campaign", args=[obj.pk]),
+            reverse("admin:data_campaign_stop-campaign", args=[obj.pk]),
+            reverse("admin:data_campaign_view-results", args=[obj.pk]),
         )
 
     campaign_actions.short_description = "Actions"
