@@ -30,12 +30,12 @@ class CampaignAdmin(admin.ModelAdmin):
         custom_urls = [
             path(
                 r"<path:object_id>/start-campaign/",
-                self.admin_site.admin_view(self.start_campaign),
+                self.admin_site.admin_view(lambda request, object_id: start_campaign(self, request, Campaign.objects.filter(pk=object_id))),
                 name="start-campaign",
             ),
             path(
                 r"<path:object_id>/stop-campaign/",
-                self.admin_site.admin_view(self.stop_campaign),
+                self.admin_site.admin_view(lambda request, object_id: stop_campaign(self, request, Campaign.objects.filter(pk=object_id))),
                 name="stop-campaign",
             ),
         ]
