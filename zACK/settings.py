@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import json
 
 from .env import (
     DJANGO_DEBUG,
@@ -181,3 +182,6 @@ CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:63
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+with open('/path/to/system_prompts.json') as f:
+    SYSTEM_PROMPTS = json.load(f)

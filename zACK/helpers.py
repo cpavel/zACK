@@ -16,7 +16,7 @@ import requests
 from urllib.parse import quote
 from django.utils.html import strip_tags
 from zACK.celery import app
-from data.models import EvaluationTemplate, PromptTemplate
+from data.models import EvaluationTemplate, PromptTemplate, SearchTerm
 
 from .env import (
     OPENAI_ORGANIZATION_ID,
@@ -24,14 +24,16 @@ from .env import (
     CUSTOM_LLM_API_BASE_URL,
     CUSTOM_LLM_API_KEY,
     CUSTOM_LLM_MODEL,
+    IS_DEV,
 )
 from .instructions import hacker_news
-from .settings import REDIS_HOSTNAME, REDIS_PASSWORD, REDIS_PORT, IS_DEV
+from .settings import REDIS_HOSTNAME, REDIS_PASSWORD, REDIS_PORT
 
 HN_API_ROOT = "https://hn.algolia.com/api/v1"
 
 LOGS_DIR = "./logs/"
 SEARCH_TERM_LOG_FILE_NAME = "{}searchterm-{}.log"
+RESULTS_LOG_FILE = os.path.join(LOGS_DIR, "results.log")
 
 os.makedirs(LOGS_DIR, exist_ok=True)
 
@@ -51,6 +53,10 @@ if IS_DEV:
     logger.addHandler(console_logger)
 
     logger.info("Running in DEV mode")
+
+    handler = logging.FileHandler(RESULTS_LOG_FILE)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+    logger.addHandler(handler)
 
 # Load system prompts from JSON file with error handling
 def load_system_prompt(role: str):
@@ -211,9 +217,7 @@ class HackerNewsClient:
 
         return response
 
-    def get_hacker_news_profile(
-        self, username: str, force: bool = False
-    ) -> tuple[str, str]:
+    def get_hacker_news_profile(self, username: str, force: bool = False) -> tuple[str, str]:
         logger.info("Fetching profile for user: %s", username)
 
         self.check_rate_limit(remaining_rate=300)
@@ -224,7 +228,8 @@ class HackerNewsClient:
         hacker_news_url = "https://news.ycombinator.com/user?id=" + username
         if not profile_about:
             response = self.get(url)
-            profile_about = response.json().get("about", "").strip()
+            profile_about = response.json().get("about", "")
+            profile_about = profile_about.strip() if profile_about else ""
             redis_client.set_str(key, value=profile_about, ttl=ONE_DAY)
             logger.info("Profile about for %s: %s", username, profile_about)
 
@@ -359,3 +364,52 @@ TASK_DEFAULTS = {
     "max_retries": 5,
     "retry_backoff": True,
 }
+
+def process_search_results(search_results, campaign):
+    for result in search_results:
+        lead_result = LeadSearchResult(
+            campaign=campaign,  # Ensure this is provided
+            search_term=result['search_term'],
+            location=result['location'],
+            username=result['username'],
+            profile_about=result['profile_about'],
+            profile_url=result['profile_url'],
+            comment=result['comment'],
+            # Add other required fields if necessary
+        )
+        # Process lead_result as needed
+
+def evaluate_post(post, evaluation_criteria):
+    # Implement evaluation logic based on system_prompts.json
+    score = 0
+    # Example: Check for keywords in post
+    for criterion, description in evaluation_criteria.items():
+        if any(keyword in post for keyword in description.split()):
+            score += 1
+    return score
+
+def generate_response(post, score, post_generator):
+    # Implement response generation logic
+    if score >= 3:  # Example threshold
+        response = f"Response to post: {post}"
+        # Use LLM to generate a detailed response
+        return response
+    return None
+
+@app.task
+def search_and_respond(search_term_id):
+    search_term = SearchTerm.objects.get(id=search_term_id)
+    # Simulate search on Hacker News
+    posts = ["Example post about GPU costs", "Another post about AI optimization"]
+    evaluation_criteria = settings.SYSTEM_PROMPTS['evaluator']['evaluation_criteria']
+    post_generator = settings.SYSTEM_PROMPTS['post_generator']
+
+    for post in posts:
+        score = evaluate_post(post, evaluation_criteria)
+        response = generate_response(post, score, post_generator)
+        if response:
+            if IS_DEV:
+                logger.info(f"Post: {post}, Score: {score}, Response: {response}")
+            else:
+                # Implement posting logic in production
+                pass
