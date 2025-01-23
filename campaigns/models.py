@@ -7,6 +7,7 @@ from django.db.models import (
     ForeignKey,
     Index,
     UniqueConstraint,
+    CharField,
 )
 from zACK import enums
 from zACK.mixins import TimeStampMixin
@@ -26,7 +27,15 @@ class Campaign(TimeStampMixin):
         default=None,
         null=True,
     )
-    run_status = TextField(max_length=200, null=True, blank=True)
+    RUN_STATUS_CHOICES = [
+        ('do_not_run', 'Do Not Run'),
+        ('run', 'Run'),
+    ]
+    run_status = CharField(
+        max_length=20,
+        choices=RUN_STATUS_CHOICES,
+        default='do_not_run',
+    )
 
     # Search Configurations
     locations = ChoiceArrayField(

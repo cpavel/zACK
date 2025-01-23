@@ -18,3 +18,9 @@ def start_campaign(campaign_id):
         return
 
     find_leads(campaign=campaign)
+
+
+def start_campaign_if_needed(campaign):
+    if campaign.run_status == 'run':
+        # Logic to start the campaign
+        start_campaign.delay(campaign.id)  # Assuming start_campaign is a Celery task
