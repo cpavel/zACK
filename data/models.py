@@ -41,7 +41,7 @@ class SearchTerm(Model):
 
     campaign = ForeignKey(
         Campaign,
-        related_name="search_terms",
+        related_name="search_terms_data",
         db_constraint=False,
         on_delete=CASCADE,
         default=None,
