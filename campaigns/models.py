@@ -80,3 +80,23 @@ class Campaign(TimeStampMixin):
                 name="unique_campaign_name_per_user",
             ),
         ]
+
+
+class CampaignLeadSearchResult:
+    def __init__(self, campaign, location, username, profile_about, profile_url, comment, comment_url):
+        self.campaign = campaign
+        self.location = location
+        self.username = username
+        self.profile_about = profile_about
+        self.profile_url = profile_url
+        self.comment = comment
+        self.comment_url = comment_url
+        self.post_evaluate_request_text = None
+        self.post_evaluate_response_text = None
+        self.post_score = None
+        self.prompt_template = None
+        self.prompt_request_text = None
+        self.prompt_response_text = None
+        self.evaluate_request_text = None
+        self.evaluate_response_text = None
+        self.score = None

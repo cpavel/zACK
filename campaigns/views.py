@@ -25,6 +25,7 @@ class CreateCampaignAPIView(generics.CreateAPIView):
         return super().handle_exception(exc)
 
     def perform_create(self, serializer):
+        serializer.save(campaign=self.request.data.get('campaign'))
         super().perform_create(serializer)
 
 
