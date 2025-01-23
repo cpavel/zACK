@@ -1,0 +1,61 @@
+# Ignore Pavel.code-workspace
+Pavel.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+*.pot
+*.pyc
+
+# Environments
+.env
+venv/
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database
+*.sqlite3
+
+# Static files
+/static/
+/media/
+
+# Celery beat schedule file
+celerybeat-schedule
+
+# Coverage reports
+htmlcov/
+.coverage
+.tox/
+
+# Test outputs
+.junit/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Docker
+*.env
+Dockerfile
+.dockerignore
+
+# Misc
+*.swp
+*.swo
+*.swn 
