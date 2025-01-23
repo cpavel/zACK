@@ -224,6 +224,7 @@ def search_leads(
                 )
 
                 search_result = LeadSearchResult(
+                    campaign=search_term.campaign,
                     search_term=search_term,
                     location=enums.SearchLocation(search_term.location),
                     username=username,
