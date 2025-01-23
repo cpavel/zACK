@@ -72,7 +72,7 @@ class MatrixEffect {
                 this.drops[i] = 0;
             } else {
                 // Move the y coordinate for the column down
-                this.drops[i] += this.speeds[i] * 20;
+                this.drops[i] += this.speeds[i] * 0.1;
             }
         }
     }
