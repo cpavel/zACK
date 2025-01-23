@@ -57,27 +57,25 @@ class MatrixEffect {
         this.ctx.fillStyle = '#0F0';
         this.ctx.font = `${this.fontSize}px monospace`;
 
-        // Draw sentences
+        // Draw characters vertically
         for (let i = 0; i < this.drops.length; i++) {
             const sentence = this.getRandomSentence();
             const x = i * this.fontSize;
-            const y = this.drops[i] * this.fontSize;
+            let y = this.drops[i] * this.fontSize;
 
-            // Add white highlight for first character in column
-            if (this.drops[i] === 1) {
-                this.ctx.fillStyle = '#FFF';
-                this.ctx.fillText(sentence, x, y);
-                this.ctx.fillStyle = '#0F0';
-            } else {
-                this.ctx.fillText(sentence, x, y);
+            // Draw each character of the sentence vertically
+            for (let j = 0; j < sentence.length; j++) {
+                const char = sentence[j];
+                this.ctx.fillText(char, x, y);
+                y += this.fontSize;
             }
 
             // Reset column or move it down (reduced probability to reset)
             if (y > this.canvas.height && Math.random() > 0.995) {
                 this.drops[i] = 0;
             }
-            // Slow down the falling speed by incrementing by 0.1 instead of 1
-            this.drops[i] += 0.1;
+            // Slow down the falling speed by incrementing by 0.05 instead of 0.1
+            this.drops[i] += 0.05;
         }
     }
 
