@@ -154,9 +154,17 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
+import logging
+
 REDIS_HOSTNAME = os.getenv('REDIS_HOSTNAME', 'localhost')
 REDIS_PORT = os.getenv('REDIS_PORT', 6379)
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
+
+# Configure logging to write to a log file in /opt/zACK/logs
+logging.basicConfig(filename='/opt/zACK/logs/redis_config.log', level=logging.INFO)
+
+# Add log message to print out the hostname, port, and password
+logging.info(f"REDIS_HOSTNAME: {REDIS_HOSTNAME}, REDIS_PORT: {REDIS_PORT}, REDIS_PASSWORD: {REDIS_PASSWORD}")
 
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_RESULT_SERIALIZER = "json"
