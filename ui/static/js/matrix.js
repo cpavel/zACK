@@ -29,6 +29,7 @@ class MatrixEffect {
         this.fontSize = 15;
         this.columns = Math.floor(this.canvas.width / this.fontSize);
         this.drops = Array(this.columns).fill(1);
+        this.speeds = Array.from({ length: this.columns }, () => Math.random() * 0.1 + 0.05); // Random speeds
         
         // Create character sets including our messages
         this.chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$@#*%'.split('');
@@ -69,12 +70,13 @@ class MatrixEffect {
                 this.ctx.fillText(char, x, y + j * this.fontSize);
             }
 
-            // Move the column down
-            this.drops[i] += 0.05;
+            // Move the column down with random speed
+            this.drops[i] += this.speeds[i];
 
             // Reset column if it goes off screen
             if (this.drops[i] * this.fontSize > this.canvas.height) {
                 this.drops[i] = 0;
+                this.speeds[i] = Math.random() * 0.1 + 0.05; // Re-randomize speed
             }
         }
     }
