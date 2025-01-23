@@ -12,7 +12,7 @@ from leads.helpers import RESULTS_FILE_NAME, RESULTS_DIR
 
 from data import models
 from zACK.tasks import async_search_term_by_id
-from .models import Campaign
+from campaigns.models import Campaign
 
 
 @admin.action(description="Start search")
