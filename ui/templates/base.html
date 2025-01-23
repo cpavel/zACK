@@ -7,48 +7,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		{% tailwind_css %}
-		<style>
-			body {
-				margin: 0;
-				padding: 0;
-				background-color: black;
-				overflow: hidden;
-				font-family: 'Courier New', monospace;
-			}
-			.matrix-container {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background-color: black;
-			}
-			.matrix-column {
-				position: absolute;
-				top: -100%;
-				color: #0F0;
-				font-size: 1.2em;
-				text-align: center;
-				white-space: pre;
-				animation-timing-function: linear;
-				animation-iteration-count: infinite;
-			}
-			@keyframes matrix-fall {
-				from {
-					transform: translateY(-100%);
-					opacity: 1;
-				}
-				to {
-					transform: translateY(100vh);
-					opacity: 0.3;
-				}
-			}
-		</style>
+		<link rel="stylesheet" href="{% static 'css/matrix.css' %}">
 	</head>
 
 	<body>
-		<div class="matrix-container" id="matrix">
-			{% block content %}{% endblock %}
-		</div>
+		<canvas id="matrix"></canvas>
+		{% block content %}{% endblock %}
 	</body>
 </html>
