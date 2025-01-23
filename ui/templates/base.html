@@ -7,6 +7,29 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		{% tailwind_css %}
+		<style>
+			body {
+				background-color: black;
+				color: #00ff00;
+				font-family: 'Courier New', Courier, monospace;
+				overflow: hidden;
+			}
+			.matrix {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+			.matrix-text {
+				white-space: nowrap;
+				display: inline-block;
+				animation: scroll 10s linear infinite;
+			}
+			@keyframes scroll {
+				0% { transform: translateY(100%); }
+				100% { transform: translateY(-100%); }
+			}
+		</style>
 	</head>
 
 	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
@@ -19,7 +42,7 @@
 			</section>
 		</div>
 		<!-- <div class="flex items-center justify-center"> -->
-    <div class="flex justify-center">
+    <div class="matrix">
       {% block content %}{% endblock %}
     </div>
     </div>

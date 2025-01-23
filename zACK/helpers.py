@@ -140,7 +140,6 @@ class RedisClient:
 
 def get_redis_client():
     client = RedisClient()
-    logging.info(f"Connecting to Redis with host: {settings.REDIS_HOSTNAME}, port: {settings.REDIS_PORT}, password: {settings.REDIS_PASSWORD}")
     return client
 
 
