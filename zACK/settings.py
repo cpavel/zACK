@@ -183,5 +183,5 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-with open('/path/to/system_prompts.json') as f:
+with open('/opt/zACK/system_prompts.json') as f:
     SYSTEM_PROMPTS = json.load(f)
