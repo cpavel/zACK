@@ -43,12 +43,9 @@ class MatrixEffect {
         this.canvas.height = window.innerHeight;
     }
 
-    getRandomChar() {
-        // 20% chance to use a character from our messages
-        if (Math.random() < 0.2) {
-            return this.messageChars[Math.floor(Math.random() * this.messageChars.length)];
-        }
-        return this.chars[Math.floor(Math.random() * this.chars.length)];
+    getRandomSentence() {
+        // Select a random sentence from the messages array
+        return this.messages[Math.floor(Math.random() * this.messages.length)];
     }
 
     draw() {
@@ -60,27 +57,27 @@ class MatrixEffect {
         this.ctx.fillStyle = '#0F0';
         this.ctx.font = `${this.fontSize}px monospace`;
 
-        // Draw characters
+        // Draw sentences
         for (let i = 0; i < this.drops.length; i++) {
-            const text = this.getRandomChar();
+            const sentence = this.getRandomSentence();
             const x = i * this.fontSize;
             const y = this.drops[i] * this.fontSize;
 
             // Add white highlight for first character in column
             if (this.drops[i] === 1) {
                 this.ctx.fillStyle = '#FFF';
-                this.ctx.fillText(text, x, y);
+                this.ctx.fillText(sentence, x, y);
                 this.ctx.fillStyle = '#0F0';
             } else {
-                this.ctx.fillText(text, x, y);
+                this.ctx.fillText(sentence, x, y);
             }
 
             // Reset column or move it down (reduced probability to reset)
             if (y > this.canvas.height && Math.random() > 0.995) {
                 this.drops[i] = 0;
             }
-            // Slow down the falling speed by incrementing by 0.25 instead of 1
-            this.drops[i] += 0.25;
+            // Slow down the falling speed by incrementing by 0.1 instead of 1
+            this.drops[i] += 0.1;
         }
     }
 
