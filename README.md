@@ -76,9 +76,11 @@ Project Architecture in visual form: https://gitdiagram.com/cpavel/zACK
    CREATE USER admin WITH PASSWORD 'admin';
    GRANT ALL PRIVILEGES ON DATABASE zackdb TO admin;
    \q
+   ```
 
 Rename .env_ to .env and set up variables
 
+   ```bash
    cd /opt/zACK
    sudo python3 -m venv venv
    source venv/bin/activate
