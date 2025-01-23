@@ -67,9 +67,36 @@ class StartCampaignAPIView(views.APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
+        campaign.is_running = True
+        campaign.save()
+
         update_campaign_run_status(campaign, "Queued")
         start_campaign.delay(campaign.pk)
 
         return Response(
             {"message": "Campaign started."}, status=status.HTTP_200_OK
+        )
+
+
+class StopCampaignAPIView(views.APIView):
+    queryset = Campaign.objects.all()
+    serializer_class = CampaignSerializer
+    lookup_field = "id"
+
+    def post(self, request, id):
+        try:
+            campaign = Campaign.objects.get(id=id)
+        except Campaign.DoesNotExist:
+            return Response(
+                {"error": f"Campaign {id} not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        campaign.is_running = False
+        campaign.save()
+
+        update_campaign_run_status(campaign, "Stopped")
+
+        return Response(
+            {"message": "Campaign stopped."}, status=status.HTTP_200_OK
         )

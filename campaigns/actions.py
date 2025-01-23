@@ -74,6 +74,11 @@ def find_leads(
 
     update_campaign_run_status(campaign, f"Finished with {len(search_results)} results.")
 
+    # Log results to logs/results.log
+    with open('logs/results.log', 'a') as log_file:
+        for result in search_results:
+            log_file.write(f"Campaign: {result.campaign.name}, Search Term: {result.search_term}, Evaluation Result: {result.evaluate_response_text}, Proposed Response: {result.prompt_response_text}\n")
+
 
 def generate_hacker_news_leads(
     campaign: Campaign,

@@ -1,3 +1,21 @@
 from django.contrib import admin
+from .models import Campaign
 
-# Register your models here.
+def start_campaign(modeladmin, request, queryset):
+    for campaign in queryset:
+        campaign.is_running = True
+        campaign.save()
+
+def stop_campaign(modeladmin, request, queryset):
+    for campaign in queryset:
+        campaign.is_running = False
+        campaign.save()
+
+start_campaign.short_description = "Start selected campaigns"
+stop_campaign.short_description = "Stop selected campaigns"
+
+class CampaignAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_at', 'updated_at', 'is_running')
+    actions = [start_campaign, stop_campaign]
+
+admin.site.register(Campaign, CampaignAdmin)

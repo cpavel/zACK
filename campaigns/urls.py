@@ -6,6 +6,7 @@ from .views import (
     UpdateCampaignAPIView,
     DeleteCampaignAPIView,
     StartCampaignAPIView,
+    StopCampaignAPIView,
 )
 
 app_name = "campaigns"
@@ -20,4 +21,5 @@ urlpatterns = [
         "delete/<id>", DeleteCampaignAPIView.as_view(), name="delete_campaign"
     ),
     path("start/<id>", StartCampaignAPIView.as_view(), name="start_campaign"),
+    path("stop/<id>", StopCampaignAPIView.as_view(), name="stop_campaign"),
 ]
