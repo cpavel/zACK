@@ -34,3 +34,6 @@ CUSTOM_LLM_API_KEY = os.environ.get("CUSTOM_LLM_API_KEY", "")
 CUSTOM_LLM_MODEL = os.environ.get("CUSTOM_LLM_MODEL", "default-model")
 
 print("Current working directory:", os.getcwd())
+
+# Add this line to define IS_DEV
+IS_DEV = RUNNING_ENVIRONMENT == "dev"
