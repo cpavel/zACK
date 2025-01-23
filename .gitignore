@@ -58,4 +58,8 @@ Dockerfile
 # Misc
 *.swp
 *.swo
-*.swn 
+*.swn
+
+# Additional lines
+logs/
+tmp/ 

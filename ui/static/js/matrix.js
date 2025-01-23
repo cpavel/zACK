@@ -9,7 +9,12 @@ class MatrixEffect {
             "Machine Learning expensive production scale",
             "AI infrastructure costs",
             "GPU acceleration",
-            "AI optimization"
+            "AI optimization",
+            "Social Media outreach",
+            "AI agents writing for you",
+            "Pavel says hi",
+            "Panda and his friend racoon were here",
+            "Trash Panda ftw"
         ];
 
         this.initialize();
