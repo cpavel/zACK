@@ -119,3 +119,76 @@ def test_find_leads_has_hackernews_hits(
     assert lead.campaign == campaign
     assert 1 <= lead.post_score <= 100
     assert 1 <= lead.score <= 100
+
+
+def test_find_leads_has_twitter_hits(
+    baker,
+):
+    user = baker.make(
+        "auth.User",
+        id=1,
+    )
+    campaign = baker.make(
+        "campaigns.Campaign",
+        id=1,
+        user=user,
+        name="Hello",
+        locations=[enums.SearchLocation.TWITTER],
+        search_terms="Python",
+        post_evaluation_prompt="Test",
+        response_evaluation_prompt="Test",
+    )
+    _ = baker.make(
+        "data.PromptTemplate", campaign=campaign, template="Hey! This is TJ"
+    )
+    _ = baker.make(
+        "data.PromptTemplate", campaign=campaign, template="Hi there, TJ here."
+    )
+
+    find_leads(campaign)
+
+    campaign.refresh_from_db()
+
+    assert "Finished" in campaign.run_status
+    assert Lead.objects.count() == 1
+    lead = Lead.objects.first()
+    assert lead.campaign == campaign
+    assert 1 <= lead.post_score <= 100
+    assert 1 <= lead.score <= 100
+
+
+def test_campaign_argument_in_CampaignLeadSearchResult_instantiation(
+    baker,
+):
+    user = baker.make(
+        "auth.User",
+        id=1,
+    )
+    campaign = baker.make(
+        "campaigns.Campaign",
+        id=1,
+        user=user,
+        name="Hello",
+        locations=[enums.SearchLocation.HACKER_NEWS],
+        search_terms="Django",
+        post_evaluation_prompt="Test",
+        response_evaluation_prompt="Test",
+    )
+    _ = baker.make(
+        "data.PromptTemplate", campaign=campaign, template="Hey! This is TJ"
+    )
+    _ = baker.make(
+        "data.PromptTemplate", campaign=campaign, template="Hi there, TJ here."
+    )
+
+    find_leads(campaign)
+
+    campaign.refresh_from_db()
+
+    assert "Finished" in campaign.run_status
+    assert Lead.objects.count() == 1
+    lead = Lead.objects.first()
+    assert lead.campaign == campaign
+    assert 1 <= lead.post_score <= 100
+    assert 1 <= lead.score <= 100
+    assert lead.campaign == campaign
