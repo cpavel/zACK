@@ -132,6 +132,10 @@ class PromptTemplateAdmin(admin.ModelAdmin):
         "max_profile_length",
         "id",
     )
+    list_filter = ("campaign",)
+    search_fields = ("template", "campaign__name")
+    fields = ("template", "min_profile_length", "max_profile_length", "campaign")
+    autocomplete_fields = ("campaign",)
 
 
 @admin.register(models.EvaluationTemplate)
