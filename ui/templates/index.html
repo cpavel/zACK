@@ -1,10 +1,52 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="matrix-text">
-    zACK - Your AI Agent for Lead Engagement<br>
-    Machine Learning expensive production scale<br>
-    AI infrastructure costs<br>
-    GPU acceleration<br>
-    AI optimization<br>
-</div>
+<script>
+    const messages = [
+        "zACK - Your AI Agent for Lead Engagement",
+        "Machine Learning expensive production scale",
+        "AI infrastructure costs",
+        "GPU acceleration",
+        "AI optimization"
+    ];
+
+    const matrixContainer = document.getElementById('matrix');
+    const columnCount = Math.floor(window.innerWidth / 20); // Adjust spacing between columns
+
+    function createMatrixColumn() {
+        const column = document.createElement('div');
+        column.className = 'matrix-column';
+        
+        // Random starting position
+        column.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration between 8 and 15 seconds
+        const duration = 8 + Math.random() * 7;
+        column.style.animation = `matrix-fall ${duration}s linear infinite`;
+
+        // Create the text content
+        const message = messages[Math.floor(Math.random() * messages.length)];
+        column.textContent = message;
+
+        return column;
+    }
+
+    function initMatrix() {
+        // Clear existing columns
+        matrixContainer.innerHTML = '';
+
+        // Create initial columns
+        for (let i = 0; i < columnCount; i++) {
+            const column = createMatrixColumn();
+            // Add random delay to stagger the start
+            column.style.animationDelay = `${Math.random() * 5}s`;
+            matrixContainer.appendChild(column);
+        }
+    }
+
+    // Initialize the matrix effect
+    initMatrix();
+
+    // Reinitialize on window resize
+    window.addEventListener('resize', initMatrix);
+</script>
 {% endblock %}

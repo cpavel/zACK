@@ -9,34 +9,45 @@
 		{% tailwind_css %}
 		<style>
 			body {
-				background-color: black;
-				color: #00ff00;
-				font-family: 'Courier New', Courier, monospace;
-				overflow: hidden;
-				height: 100vh;
 				margin: 0;
+				padding: 0;
+				background-color: black;
+				overflow: hidden;
+				font-family: 'Courier New', monospace;
 			}
-			.matrix {
-				position: relative;
+			.matrix-container {
+				position: fixed;
+				top: 0;
+				left: 0;
 				width: 100%;
 				height: 100%;
-				overflow: hidden;
+				background-color: black;
 			}
-			.matrix-text {
+			.matrix-column {
 				position: absolute;
-				top: 100%;
-				white-space: nowrap;
-				animation: scroll 10s linear infinite;
+				top: -100%;
+				color: #0F0;
+				font-size: 1.2em;
+				text-align: center;
+				white-space: pre;
+				animation-timing-function: linear;
+				animation-iteration-count: infinite;
 			}
-			@keyframes scroll {
-				0% { transform: translateY(0); }
-				100% { transform: translateY(-100%); }
+			@keyframes matrix-fall {
+				from {
+					transform: translateY(-100%);
+					opacity: 1;
+				}
+				to {
+					transform: translateY(100vh);
+					opacity: 0.3;
+				}
 			}
 		</style>
 	</head>
 
 	<body>
-		<div class="matrix">
+		<div class="matrix-container" id="matrix">
 			{% block content %}{% endblock %}
 		</div>
 	</body>
