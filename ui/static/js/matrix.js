@@ -72,8 +72,12 @@ class MatrixEffect {
                 this.ctx.fillText(char, x, y + j * this.fontSize);
             }
 
+            // Adjust speed based on vertical position
+            const positionFactor = y / this.canvas.height;
+            const speedAdjustment = 1 - positionFactor; // Slower at the top, faster at the bottom
+
             // Move the column down
-            this.drops[i] += this.speeds[i] * 0.5;
+            this.drops[i] += this.speeds[i] * speedAdjustment * 0.5;
 
             // Reset column if it goes off screen
             if (this.drops[i] * this.fontSize > this.canvas.height) {
