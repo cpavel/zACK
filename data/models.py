@@ -161,3 +161,13 @@ class PromptResponse(Model):
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
+
+
+class Campaign(Model):
+    name = TextField(max_length=255)
+    description = TextField(blank=True, null=True)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
