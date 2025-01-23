@@ -1,5 +1,6 @@
 # Ignore Pavel.code-workspace
 Pavel.code-workspace
+*.code-workspace
 
 # Python
 __pycache__/
