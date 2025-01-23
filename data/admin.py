@@ -12,7 +12,6 @@ from leads.helpers import RESULTS_FILE_NAME, RESULTS_DIR
 
 from data import models
 from zACK.tasks import async_search_term_by_id
-from campaigns.models import Campaign
 
 
 @admin.action(description="Start search")
@@ -141,13 +140,3 @@ class PromptTemplateAdmin(admin.ModelAdmin):
 @admin.register(models.EvaluationTemplate)
 class EvaluationTemplateAdmin(admin.ModelAdmin):
     list_display = ("template", "id")
-
-
-@admin.register(Campaign)
-class CampaignAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_at', 'updated_at')
-    search_fields = ('name',)
-
-
-# TODO: This is not used. Remove all related code.
-# admin.site.register(models.PromptResponse)
