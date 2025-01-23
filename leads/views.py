@@ -12,3 +12,10 @@ class SearchTermListView(ModelViewSet):
     queryset = SearchTerm.objects.all()
     serializer_class = SearchTermSerializer
     permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        campaign = self.request.query_params.get('campaign', None)
+        if campaign is not None:
+            queryset = queryset.filter(campaign=campaign)
+        return queryset
