@@ -77,10 +77,10 @@ class MatrixEffect {
             const speedAdjustment = 1 - positionFactor; // Slower at the top, faster at the bottom
 
             // Move the column down
-            this.drops[i] += this.speeds[i] * speedAdjustment * 0.5;
+            this.drops[i] += this.speeds[i] * speedAdjustment * 0.3; // Adjusted for more sparseness
 
-            // Reset column if it goes off screen
-            if (this.drops[i] * this.fontSize > this.canvas.height) {
+            // Reset column if it goes off screen or randomly to keep it sparse
+            if (this.drops[i] * this.fontSize > this.canvas.height || Math.random() > 0.98) {
                 this.drops[i] = 0;
             }
         }

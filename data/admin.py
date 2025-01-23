@@ -155,13 +155,13 @@ class CampaignAdmin(admin.ModelAdmin):
         campaign = self.get_object(request, object_id)
         async_start_campaign.delay(object_id)
         campaign.save()
-        return redirect(request.META.get("HTTP_REFERER"))
+        return redirect('admin:data_campaign_changelist')
 
     def stop_campaign(self, request, object_id, *args, **kwargs):
         campaign = self.get_object(request, object_id)
         async_stop_campaign.delay(object_id)
         campaign.save()
-        return redirect(request.META.get("HTTP_REFERER"))
+        return redirect('admin:data_campaign_changelist')
 
     def view_results(self, request, object_id, *args, **kwargs):
         log_file_path = f"/opt/zACK/logs/campaign_{object_id}.log"
