@@ -71,11 +71,11 @@ class MatrixEffect {
             }
 
             // Reset column or move it down (reduced probability to reset)
-            if (y > this.canvas.height && Math.random() > 0.99) {
+            if (y > this.canvas.height && Math.random() > 0.995) {
                 this.drops[i] = 0;
             }
-            // Slow down the falling speed by incrementing by 0.5 instead of 1
-            this.drops[i] += 0.5;
+            // Slow down the falling speed by incrementing by 0.25 instead of 1
+            this.drops[i] += 0.25;
         }
     }
 
@@ -88,4 +88,4 @@ class MatrixEffect {
 // Initialize when document is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new MatrixEffect();
-}); 
+});
