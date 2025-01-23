@@ -47,8 +47,8 @@ class MatrixEffect {
     }
 
     draw() {
-        // Create semi-transparent black rectangle
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        // Create semi-transparent black rectangle with more opacity to slow down the fade
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Set text properties
@@ -70,11 +70,12 @@ class MatrixEffect {
                 this.ctx.fillText(text, x, y);
             }
 
-            // Reset column or move it down
-            if (y > this.canvas.height && Math.random() > 0.975) {
+            // Reset column or move it down (reduced probability to reset)
+            if (y > this.canvas.height && Math.random() > 0.99) {
                 this.drops[i] = 0;
             }
-            this.drops[i]++;
+            // Slow down the falling speed by incrementing by 0.5 instead of 1
+            this.drops[i] += 0.5;
         }
     }
 
