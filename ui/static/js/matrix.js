@@ -50,33 +50,29 @@ class MatrixEffect {
     }
 
     draw() {
-        // Create semi-transparent black rectangle with more opacity to slow down the fade
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        // Create semi-transparent black rectangle to create trailing effect
+        this.ctx.fillStyle = '#0001';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Set text properties
         this.ctx.fillStyle = '#0F0';
-        this.ctx.font = `${this.fontSize}px monospace`;
+        this.ctx.font = '15pt monospace';
 
         // Draw characters vertically
         for (let i = 0; i < this.drops.length; i++) {
-            const sentence = this.getRandomSentence();
             const x = i * this.fontSize;
-            let y = this.drops[i] * this.fontSize;
+            const y = this.drops[i] * this.fontSize;
 
-            // Draw each character of the sentence vertically
-            for (let j = 0; j < sentence.length; j++) {
-                const char = sentence[j];
-                this.ctx.fillText(char, x, y + j * this.fontSize);
-            }
+            // Generate a random character
+            const char = String.fromCharCode(Math.random() * 128);
+            this.ctx.fillText(char, x, y);
 
-            // Move the column down with random speed
-            this.drops[i] += this.speeds[i];
-
-            // Reset column if it goes off screen
-            if (this.drops[i] * this.fontSize > this.canvas.height) {
+            // Randomly reset the end of the column if it's at least 100px high
+            if (y > 100 + Math.random() * 10000) {
                 this.drops[i] = 0;
-                this.speeds[i] = Math.random() * 0.1 + 0.05; // Re-randomize speed
+            } else {
+                // Move the y coordinate for the column down
+                this.drops[i] += this.speeds[i] * 20;
             }
         }
     }
