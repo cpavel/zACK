@@ -367,6 +367,7 @@ TASK_DEFAULTS = {
 
 def process_search_results(search_results, campaign):
     for result in search_results:
+        # Ensure campaign is provided
         lead_result = LeadSearchResult(
             campaign=campaign,  # Ensure this is provided
             search_term=result['search_term'],
@@ -377,7 +378,18 @@ def process_search_results(search_results, campaign):
             comment=result['comment'],
             # Add other required fields if necessary
         )
-        # Process lead_result as needed
+        # Evaluate the lead result
+        evaluate_lead(lead_result)
+
+def evaluate_lead(lead_result):
+    # Implement evaluation logic based on system_prompts.json
+    evaluation_criteria = settings.SYSTEM_PROMPTS['evaluator']['evaluation_criteria']
+    score = evaluate_post(lead_result.comment, evaluation_criteria)
+    if score >= 3:  # Example threshold
+        response = generate_response(lead_result.comment, score, settings.SYSTEM_PROMPTS['post_generator'])
+        if response:
+            logger.info(f"Generated response: {response}")
+            # Handle response (e.g., log, store, or post)
 
 def evaluate_post(post, evaluation_criteria):
     # Implement evaluation logic based on system_prompts.json
