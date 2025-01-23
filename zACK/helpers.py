@@ -92,9 +92,9 @@ class HackerNewsRateLimitError(Exception):
 class RedisClient:
     def __init__(self):
         self._client = redis.Redis(
-            host=REDIS_HOSTNAME,
-            port=REDIS_PORT,
-            password=REDIS_PASSWORD,
+            host=settings.REDIS_HOSTNAME,
+            port=settings.REDIS_PORT,
+            password=settings.REDIS_PASSWORD
         )
 
     def set_int(self, key: str, value: int, ttl: Optional[int] = None) -> None:
