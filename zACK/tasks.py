@@ -30,6 +30,8 @@ from zACK.helpers import (
 from data.models import PromptTemplate, SearchTerm
 from leads.helpers import LeadSearchResult, store_search_results
 
+from celery import shared_task
+
 # TODO: Increase the prod limit once we have rate limiting available for the API.
 # See more here https://github.com/openai/openai-cookbook/blob/main/examples/How_to_handle_rate_limits.ipynb
 
@@ -484,3 +486,15 @@ def search_leads(
 def run_search_task(search_term_id):
     logger.info(f"Running search task for search term ID: {search_term_id}")
     # Your task logic here
+
+@shared_task
+def async_start_campaign(campaign_id):
+    # Implement the logic to start the campaign
+    print(f"Starting campaign with ID: {campaign_id}")
+    # Add your campaign start logic here
+
+@shared_task
+def async_stop_campaign(campaign_id):
+    # Implement the logic to stop the campaign
+    print(f"Stopping campaign with ID: {campaign_id}")
+    # Add your campaign stop logic here
