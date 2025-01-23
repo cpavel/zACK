@@ -66,16 +66,16 @@ class MatrixEffect {
             // Draw each character of the sentence vertically
             for (let j = 0; j < sentence.length; j++) {
                 const char = sentence[j];
-                this.ctx.fillText(char, x, y);
-                y += this.fontSize;
+                this.ctx.fillText(char, x, y + j * this.fontSize);
             }
 
-            // Reset column or move it down (reduced probability to reset)
-            if (y > this.canvas.height && Math.random() > 0.995) {
+            // Move the column down
+            this.drops[i] += 0.05;
+
+            // Reset column if it goes off screen
+            if (this.drops[i] * this.fontSize > this.canvas.height) {
                 this.drops[i] = 0;
             }
-            // Slow down the falling speed by incrementing by 0.05 instead of 0.1
-            this.drops[i] += 0.05;
         }
     }
 
