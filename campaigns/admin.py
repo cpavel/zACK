@@ -17,6 +17,7 @@ stop_campaign.short_description = "Stop selected campaigns"
 class CampaignAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_at', 'updated_at', 'is_running')
     actions = [start_campaign, stop_campaign]
+    search_fields = ('name', 'search_terms')
 
 # Check if the Campaign model is already registered
 if not admin.site.is_registered(Campaign):
