@@ -1,5 +1,6 @@
 # Ignore Pavel.code-workspace
 Pavel.code-workspace
+*.code-workspace
 
 # Python
 __pycache__/
@@ -58,8 +59,4 @@ Dockerfile
 # Misc
 *.swp
 *.swo
-*.swn
-
-# Additional lines
-logs/
-tmp/ 
+*.swn 
