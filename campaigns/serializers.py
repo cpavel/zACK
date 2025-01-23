@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class CampaignSerializer(serializers.ModelSerializer):
     prompt_templates = PromptTemplateSerializer(many=True, required=False)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    campaign = serializers.PrimaryKeyRelatedField(queryset=Campaign.objects.all(), required=False)
 
     class Meta:
         model = Campaign
@@ -26,6 +27,7 @@ class CampaignSerializer(serializers.ModelSerializer):
             "post_evaluation_prompt",
             "response_evaluation_prompt",
             "prompt_templates",
+            "campaign",
         ]
 
     def save(self):
