@@ -50,6 +50,12 @@ class Campaign(TimeStampMixin):
         blank=False,
         help_text="Terms to use for searching posts and comments.",
     )
+    twitter_search_terms = TextField(
+        max_length=200,
+        null=True,
+        blank=True,
+        help_text="Terms to use for searching Twitter posts.",
+    )
     post_evaluation_prompt = TextField(
         max_length=5000,
         null=False,

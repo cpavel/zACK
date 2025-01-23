@@ -22,6 +22,7 @@ class CampaignSerializer(serializers.ModelSerializer):
             "name",
             "locations",
             "search_terms",
+            "twitter_search_terms",
             "post_evaluation_prompt",
             "response_evaluation_prompt",
             "prompt_templates",

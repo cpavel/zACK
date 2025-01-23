@@ -425,3 +425,35 @@ def search_and_respond(search_term_id):
             else:
                 # Implement posting logic in production
                 pass
+
+
+class TwitterClient:
+    def __init__(self, api_key, api_secret_key, access_token, access_token_secret):
+        self.api_key = api_key
+        self.api_secret_key = api_secret_key
+        self.access_token = access_token
+        self.access_token_secret = access_token_secret
+
+    def search_twitter(self, query, count=100):
+        url = "https://api.twitter.com/1.1/search/tweets.json"
+        headers = {
+            "Authorization": f"Bearer {self.access_token}"
+        }
+        params = {
+            "q": query,
+            "count": count,
+            "result_type": "recent",
+            "tweet_mode": "extended"
+        }
+        response = requests.get(url, headers=headers, params=params)
+        return response
+
+
+def search_twitter(query, count=100):
+    twitter_client = TwitterClient(
+        api_key=settings.TWITTER_API_KEY,
+        api_secret_key=settings.TWITTER_API_SECRET_KEY,
+        access_token=settings.TWITTER_ACCESS_TOKEN,
+        access_token_secret=settings.TWITTER_ACCESS_TOKEN_SECRET
+    )
+    return twitter_client.search_twitter(query, count)
