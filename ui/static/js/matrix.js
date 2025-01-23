@@ -61,18 +61,23 @@ class MatrixEffect {
         // Draw characters vertically
         for (let i = 0; i < this.drops.length; i++) {
             const x = i * this.fontSize;
-            const y = this.drops[i] * this.fontSize;
+            let y = this.drops[i] * this.fontSize;
 
-            // Generate a random character
-            const char = String.fromCharCode(Math.random() * 128);
-            this.ctx.fillText(char, x, y);
+            // Get a random sentence from the messages
+            const sentence = this.getRandomSentence();
 
-            // Randomly reset the end of the column if it's at least 100px high
-            if (y > 100 + Math.random() * 10000) {
+            // Draw each character of the sentence vertically
+            for (let j = 0; j < sentence.length; j++) {
+                const char = sentence[j];
+                this.ctx.fillText(char, x, y + j * this.fontSize);
+            }
+
+            // Move the column down
+            this.drops[i] += this.speeds[i] * 0.5;
+
+            // Reset column if it goes off screen
+            if (this.drops[i] * this.fontSize > this.canvas.height) {
                 this.drops[i] = 0;
-            } else {
-                // Move the y coordinate for the column down
-                this.drops[i] += this.speeds[i] * 0.5;
             }
         }
     }

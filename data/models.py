@@ -39,6 +39,15 @@ class SearchTerm(Model):
 
     run_status = TextField(max_length=200, null=True, blank=True)
 
+    campaign = ForeignKey(
+        Campaign,
+        related_name="search_terms",
+        db_constraint=False,
+        on_delete=CASCADE,
+        default=None,
+        null=True,
+    )
+
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
 
