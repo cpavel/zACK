@@ -21,24 +21,22 @@ class MatrixEffect {
     }
 
     initialize() {
-        // Set canvas size
         this.resize();
         window.addEventListener('resize', () => this.resize());
 
-        // Initialize columns with larger font size for better readability
-        this.fontSize = 16; // Slightly larger font
+        // Adjusted font size for better readability
+        this.fontSize = 18;
         this.columns = Math.floor(this.canvas.width / this.fontSize);
         this.drops = Array(this.columns).fill(0);
         this.activeColumns = new Set();
         
-        // Much slower speeds for more graceful falling
-        this.speeds = Array.from({ length: this.columns }, () => Math.random() * 0.1 + 0.05); // Reduced speed range
+        // Even slower speeds for message readability
+        this.speeds = Array.from({ length: this.columns }, () => Math.random() * 0.05 + 0.02);
         this.messageStates = Array(this.columns).fill(null);
         
-        // Create character sets
+        // Background characters
         this.chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$@#*%'.split('');
         
-        // Start the animation
         this.animate();
     }
 
@@ -52,15 +50,15 @@ class MatrixEffect {
     }
 
     draw() {
-        // Slower fade effect
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; // More subtle fade
+        // Subtle fade effect for trail
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Set text properties
-        this.ctx.font = this.fontSize + 'px monospace';
+        // Set base text properties
+        this.ctx.font = `${this.fontSize}px monospace`;
 
-        // Reduce frequency of new message streams
-        if (Math.random() < 0.01) { // Lower probability for new messages
+        // Start new message streams occasionally
+        if (Math.random() < 0.005) {
             const col = Math.floor(Math.random() * this.columns);
             if (!this.activeColumns.has(col)) {
                 this.activeColumns.add(col);
@@ -81,34 +79,45 @@ class MatrixEffect {
                 const messageState = this.messageStates[i];
                 const chars = messageState.message.split('');
                 
-                // Increased spacing between characters
+                // Draw the message vertically with improved visibility
                 for (let j = 0; j < chars.length; j++) {
-                    const charY = y + (j * this.fontSize * 1.5); // Increased vertical spacing
+                    const charY = y + (j * this.fontSize * 1.2); // Slightly reduced spacing
                     if (charY > 0 && charY < this.canvas.height) {
-                        // More gradual fade for trailing characters
-                        const alpha = Math.max(0, 1 - (j * 0.05)); // Slower fade rate
-                        this.ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`;
+                        // Create a glowing effect for the message
+                        const alpha = Math.max(0, 1 - (j * 0.03)); // Slower fade for longer readability
+                        
+                        // Draw glow effect
+                        this.ctx.shadowColor = 'rgba(0, 255, 0, 0.5)';
+                        this.ctx.shadowBlur = 5;
+                        
                         if (j === 0) {
-                            // Brighter leading character
-                            this.ctx.fillStyle = '#fff';
+                            // Leading character: bright but not too harsh
+                            this.ctx.fillStyle = 'rgba(180, 255, 180, 0.95)';
+                        } else {
+                            // Following characters: gentle green gradient
+                            this.ctx.fillStyle = `rgba(0, 255, 0, ${alpha * 0.8})`;
                         }
+                        
                         this.ctx.fillText(chars[j], x, charY);
+                        
+                        // Reset shadow for next character
+                        this.ctx.shadowBlur = 0;
                     }
                 }
             } else {
-                // Sparser random characters
-                if (Math.random() < 0.02) { // Even lower probability for background characters
+                // Background matrix rain
+                if (Math.random() < 0.02) {
                     const randomChar = this.chars[Math.floor(Math.random() * this.chars.length)];
-                    this.ctx.fillStyle = 'rgba(0, 255, 0, 0.2)'; // More subtle background
+                    this.ctx.fillStyle = 'rgba(0, 255, 0, 0.15)';
                     this.ctx.fillText(randomChar, x, y);
                 }
             }
 
-            // Slower position updates
-            this.drops[i] += this.speeds[i] * 0.5; // Further reduced speed
+            // Update positions
+            this.drops[i] += this.speeds[i] * 0.3;
 
             // Reset column when it goes off screen
-            if (this.drops[i] * this.fontSize > this.canvas.height + 200) { // Increased reset threshold
+            if (this.drops[i] * this.fontSize > this.canvas.height + 100) {
                 this.drops[i] = 0;
                 this.activeColumns.delete(i);
                 this.messageStates[i] = null;
