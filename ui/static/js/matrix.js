@@ -37,7 +37,32 @@ class MatrixEffect {
         // Background characters
         this.chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$@#*%'.split('');
         
+        // Initialize with multiple messages
+        this.initializeMessages();
+        
         this.animate();
+    }
+
+    initializeMessages() {
+        // Initialize with 25-30 messages spread across the screen
+        const initialMessageCount = Math.floor(Math.random() * 6) + 25; // 25-30 messages
+        const usedColumns = new Set();
+
+        for (let i = 0; i < initialMessageCount; i++) {
+            let col;
+            do {
+                col = Math.floor(Math.random() * this.columns);
+            } while (usedColumns.has(col));
+
+            usedColumns.add(col);
+            this.activeColumns.add(col);
+            this.messageStates[col] = {
+                message: this.getRandomMessage(),
+                position: 0
+            };
+            // Stagger the starting positions
+            this.drops[col] = Math.random() * (this.canvas.height / this.fontSize);
+        }
     }
 
     resize() {
@@ -57,8 +82,8 @@ class MatrixEffect {
         // Set base text properties
         this.ctx.font = `${this.fontSize}px monospace`;
 
-        // Start new message streams occasionally
-        if (Math.random() < 0.005) {
+        // Start new message streams more frequently
+        if (Math.random() < 0.03) { // Increased probability
             const col = Math.floor(Math.random() * this.columns);
             if (!this.activeColumns.has(col)) {
                 this.activeColumns.add(col);
@@ -66,6 +91,22 @@ class MatrixEffect {
                     message: this.getRandomMessage(),
                     position: 0
                 };
+            }
+        }
+
+        // Maintain minimum number of active messages
+        if (this.activeColumns.size < 25) {
+            const availableColumns = Array.from({ length: this.columns }, (_, i) => i)
+                .filter(col => !this.activeColumns.has(col));
+            
+            if (availableColumns.length > 0) {
+                const newCol = availableColumns[Math.floor(Math.random() * availableColumns.length)];
+                this.activeColumns.add(newCol);
+                this.messageStates[newCol] = {
+                    message: this.getRandomMessage(),
+                    position: 0
+                };
+                this.drops[newCol] = 0;
             }
         }
 
@@ -81,26 +122,20 @@ class MatrixEffect {
                 
                 // Draw the message vertically with improved visibility
                 for (let j = 0; j < chars.length; j++) {
-                    const charY = y + (j * this.fontSize * 1.2); // Slightly reduced spacing
+                    const charY = y + (j * this.fontSize * 1.2);
                     if (charY > 0 && charY < this.canvas.height) {
-                        // Create a glowing effect for the message
-                        const alpha = Math.max(0, 1 - (j * 0.03)); // Slower fade for longer readability
+                        const alpha = Math.max(0, 1 - (j * 0.03));
                         
-                        // Draw glow effect
                         this.ctx.shadowColor = 'rgba(0, 255, 0, 0.5)';
                         this.ctx.shadowBlur = 5;
                         
                         if (j === 0) {
-                            // Leading character: bright but not too harsh
                             this.ctx.fillStyle = 'rgba(180, 255, 180, 0.95)';
                         } else {
-                            // Following characters: gentle green gradient
                             this.ctx.fillStyle = `rgba(0, 255, 0, ${alpha * 0.8})`;
                         }
                         
                         this.ctx.fillText(chars[j], x, charY);
-                        
-                        // Reset shadow for next character
                         this.ctx.shadowBlur = 0;
                     }
                 }
